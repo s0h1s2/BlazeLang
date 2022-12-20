@@ -1,8 +1,7 @@
 package jc;
 
-import java.util.EnumMap;
 import java.util.Hashtable;
-import java.util.Map;
+
 
 public class Lexer {
 	private String source;

@@ -3,6 +3,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import jc.ast.*;
+import util.AstOperation;
 
 public class Parser {
 	private Lexer lex;
@@ -63,21 +64,21 @@ public class Parser {
 	private Expression logicalOr(){
 		Expression left=logicalAnd();
 		while(match(TokenKind.TOKEN_OR)) {
-			left=new BinaryOp(left,0,logicalAnd());
+			left=new BinaryOp(left,AstOperation.getBinaryOperator(prev.getKind()),logicalAnd());
 		}
 		return left;
 	}
 	private Expression logicalAnd(){
 		Expression left=bitOr();
 		while(match(TokenKind.TOKEN_AND)) {
-			left=new BinaryOp(left,0,bitOr());
+			left=new BinaryOp(left,AstOperation.getBinaryOperator(prev.getKind()),bitOr());
 		}
 		return left;
 	}
 	private Expression bitOr(){
 		Expression left=bitXor();
 		while(match(TokenKind.TOKEN_BITOR)) {
-			left=new BinaryOp(left,0,bitXor());
+			left=new BinaryOp(left,AstOperation.getBinaryOperator(prev.getKind()),bitXor());
 		}
 		return left;
 	}
@@ -85,7 +86,7 @@ public class Parser {
 	private Expression bitXor(){
 		Expression left=bitAnd();
 		while(match(TokenKind.TOKEN_BITWISE)) {
-			left=new BinaryOp(left,0,bitAnd());
+			left=new BinaryOp(left,AstOperation.getBinaryOperator(prev.getKind()),bitAnd());
 		}
 		return left;
 		
@@ -93,7 +94,7 @@ public class Parser {
 	private Expression bitAnd(){
 		Expression left=equality();
 		while(match(TokenKind.TOKEN_BITAND)) {
-			left=new BinaryOp(left,0,equality());
+			left=new BinaryOp(left,AstOperation.getBinaryOperator(prev.getKind()),equality());
 		}
 		return left;
 	}
@@ -102,7 +103,7 @@ public class Parser {
 	private Expression equality() {
 		Expression left=relational();
 		while(match(TokenKind.TOKEN_EQUAL) || match(TokenKind.TOKEN_NOTEQUAL)) {
-			left=new BinaryOp(left, 0, relational());
+			left=new BinaryOp(left, AstOperation.getBinaryOperator(prev.getKind()), relational());
 		}
 		return left;
 		
@@ -110,7 +111,7 @@ public class Parser {
 	private Expression relational() {
 		Expression left=addition();
 		while(match(TokenKind.TOKEN_GE) || match(TokenKind.TOKEN_LE) || match(TokenKind.TOKEN_GEQ) || match(TokenKind.TOKEN_LEQ)) {
-			left=new BinaryOp(left, 0, addition());
+			left=new BinaryOp(left, AstOperation.getBinaryOperator(prev.getKind()), addition());
 		}
 		return left;
 		
@@ -124,7 +125,7 @@ public class Parser {
 	private Expression addition() {
 		Expression left=multiplicative();
 		while(match(TokenKind.TOKEN_PLUS) || match(TokenKind.TOKEN_MINUS)) {
-			left=new BinaryOp(left, 0, multiplicative());
+			left=new BinaryOp(left, AstOperation.getBinaryOperator(prev.getKind()), multiplicative());
 		}
 		return left;
 		
@@ -134,7 +135,7 @@ public class Parser {
 	private Expression multiplicative() {
 		Expression left=unary();
 		while(match(TokenKind.TOKEN_STAR) || match(TokenKind.TOKEN_SLASH)) {
-			left=new BinaryOp(left, 0, unary());
+			left=new BinaryOp(left, AstOperation.getBinaryOperator(prev.getKind()), unary());
 		}
 		return left;
 		
@@ -145,7 +146,7 @@ public class Parser {
 	}*/
 	private Expression unary() {
 		if(match(TokenKind.TOKEN_MINUS) || match(TokenKind.TOKEN_PLUS) || match(TokenKind.TOKEN_STAR) || match(TokenKind.TOKEN_BITAND)) {
-			return new Unary(0, unary());
+			return new Unary(AstOperation.getUnaryOperator(prev.getKind()), unary());
 		}else {
 			return primary();
 		}

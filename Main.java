@@ -20,16 +20,18 @@ public class Main {
 	public static void main(String[] args) {
 //		String example="char x=12+4;char y=12;\n";
 //		example+="1==1;\n";
-		String example="! != && & * || | % ? :";
+		String example="1==1?1:0";
 		
 		Lexer lex=new Lexer(example); //
-		Token token=lex.getToken();
-		while(token.getKind()!=TokenKind.TOKEN_EOF) {
-			System.out.println(token.getKind());
-			token=lex.getToken();
-		}
-		//Parser parser=new Parser(lex);
-		//parser.parse();
+		//Token token=lex.getToken();
+		
+//		while(token.getKind()!=TokenKind.TOKEN_EOF) {
+//			System.out.println(token.getKind());
+//			token=lex.getToken();
+//		}
+//		
+		Parser parser=new Parser(lex);
+		parser.parse();
 		/*Expression e=new BinaryOp(new Int(6), 2, new BinaryOp(new Int(2), 0, new Int(3)));
 		ArrayList<Stmt> body=new ArrayList<Stmt>();
 		body.add(new PrintStmt("Hello"));
