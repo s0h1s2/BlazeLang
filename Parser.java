@@ -1,9 +1,10 @@
 package jc;
 import java.util.ArrayList;
+
 import java.util.List;
 
 import jc.ast.*;
-import util.AstOperation;
+import jc.util.AstOperation;
 
 public class Parser {
 	private Lexer lex;

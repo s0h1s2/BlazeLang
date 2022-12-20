@@ -1,6 +1,6 @@
 package jc.ast;
 
-import util.AstOperators.AstBinaryOperator;
+import jc.util.AstOperators.AstBinaryOperator;
 
 public class BinaryOp extends Expression {
 	public Expression left;

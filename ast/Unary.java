@@ -1,6 +1,6 @@
 package jc.ast;
 
-import util.AstOperators.AstUnaryOperator;
+import jc.util.AstOperators.AstUnaryOperator;
 
 public class Unary extends Expression {
 	AstUnaryOperator op;

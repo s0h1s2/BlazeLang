@@ -1,12 +1,12 @@
-package util;
+package jc.util;
 
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
 import jc.TokenKind;
-import util.AstOperators.AstBinaryOperator;
-import util.AstOperators.AstUnaryOperator;
+import jc.util.AstOperators.AstBinaryOperator;
+import jc.util.AstOperators.AstUnaryOperator;
 
 public abstract class AstOperation{
 	private static Map<TokenKind, AstBinaryOperator> binaryOperations;
