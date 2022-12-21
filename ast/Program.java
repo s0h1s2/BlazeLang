@@ -1,4 +1,4 @@
-package jc.ast;
+package blaze.ast;
 
 public abstract class Program {
 

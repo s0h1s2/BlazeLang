@@ -1,6 +1,6 @@
-package jc.ast;
+package blaze.ast;
 
-import jc.util.AstOperators.AstUnaryOperator;
+import blaze.util.AstOperators.AstUnaryOperator;
 
 public class Unary extends Expression {
 	AstUnaryOperator op;

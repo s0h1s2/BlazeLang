@@ -1,4 +1,4 @@
-package jc;
+package blaze;
 
 public class Token {
 	private TokenKind kind;

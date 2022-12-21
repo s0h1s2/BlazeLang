@@ -1,12 +1,12 @@
-package jc.util;
+package blaze.util;
 
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-import jc.TokenKind;
-import jc.util.AstOperators.AstBinaryOperator;
-import jc.util.AstOperators.AstUnaryOperator;
+import blaze.TokenKind;
+import blaze.util.AstOperators.AstBinaryOperator;
+import blaze.util.AstOperators.AstUnaryOperator;
 
 public abstract class AstOperation{
 	private static Map<TokenKind, AstBinaryOperator> binaryOperations;

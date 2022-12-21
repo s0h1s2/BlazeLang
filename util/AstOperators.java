@@ -1,4 +1,4 @@
-package jc.util;
+package blaze.util;
 
 public abstract class AstOperators{
 	public enum AstBinaryOperator {

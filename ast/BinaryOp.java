@@ -1,6 +1,6 @@
-package jc.ast;
+package blaze.ast;
 
-import jc.util.AstOperators.AstBinaryOperator;
+import blaze.util.AstOperators.AstBinaryOperator;
 
 public class BinaryOp extends Expression {
 	public Expression left;

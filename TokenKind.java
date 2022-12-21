@@ -1,4 +1,4 @@
-package jc;
+package blaze;
 
 public enum TokenKind {
 	// data

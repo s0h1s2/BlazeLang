@@ -1,10 +1,10 @@
-package jc;
+package blaze;
 import java.util.ArrayList;
 
 import java.util.List;
 
-import jc.ast.*;
-import jc.util.AstOperation;
+import blaze.ast.*;
+import blaze.util.AstOperation;
 
 public class Parser {
 	private Lexer lex;
@@ -31,6 +31,8 @@ public class Parser {
 		}
 	}
 	public List<Stmt> parse() {
+		// parse function declaration.
+		// type identifier '(' atomVariable ',' atomVariable* ')' '{' stmt ';' stmt*  '}'
 		// type name '=' expression ';'
 		// type-> 'int' | 'char'
 		// name->[a-zA-Z_][a-zA-Z_1-9]*
@@ -43,7 +45,7 @@ public class Parser {
 //		while(token.getKind()!=TokenKind.TOKEN_EOF) {
 //			stmts.add(atomVariable());
 //		}
-		expression();
+		//expression();
 		return stmts;
 		
 	}
@@ -123,6 +125,7 @@ public class Parser {
 		
 		return null;
 	}*/
+	
 	private Expression addition() {
 		Expression left=multiplicative();
 		while(match(TokenKind.TOKEN_PLUS) || match(TokenKind.TOKEN_MINUS)) {
@@ -157,6 +160,8 @@ public class Parser {
 	private Expression primary() {
 		if(match(TokenKind.TOKEN_INTEGER)) {
 			return new Int((int)prev.getValue());
+		}else if(match(TokenKind.TOKEN_IDENTIFIER)) {
+			return new Int((int)1);
 		}
 		throw new Error("Syntax Error.");
 	}
@@ -164,6 +169,9 @@ public class Parser {
 /*private Stmt atomVariable() {
 if(match(TokenKind.TOKEN_CHAR)) {
 	expect(TokenKind.TOKEN_IDENTIFIER,"Expected a variable name.");
+	// check if next token is '(' then it's function declaration.
+	// otherwise it is an identifier.
+	 
 	String name=(String)prev.getValue();
 	Expression init=null;
 	if(match(TokenKind.TOKEN_ASSIGN)) {

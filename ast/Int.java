@@ -1,4 +1,4 @@
-package jc.ast;
+package blaze.ast;
 
 public class Int extends Expression {
 	private long x;

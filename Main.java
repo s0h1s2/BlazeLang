@@ -1,11 +1,12 @@
-package jc;
+package blaze;
 
 import java.util.ArrayList;
-import jc.ast.*;
+
+import blaze.ast.*;
 
 public class Main {
 	public static void main(String[] args) {
-		String example="1==1?1:0";
+		String example="**p";
 		
 		Lexer lex=new Lexer(example); //
 

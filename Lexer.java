@@ -1,4 +1,4 @@
-package jc;
+package blaze;
 
 import java.util.Hashtable;
 
