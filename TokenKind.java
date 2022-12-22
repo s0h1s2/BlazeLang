@@ -6,8 +6,16 @@ public enum TokenKind {
 	// keywords
 	TOKEN_IF,
 	TOKEN_IDENTIFIER,
+	TOKEN_INT,
 	TOKEN_VOID,
 	TOKEN_CHAR,
+	TOKEN_FUN,
+	TOKEN_STRUCT,
+	TOKEN_ENUM,
+	TOKEN_VAR,
+	TOKEN_BOOL,
+	TOKEN_TRUE,
+	TOKEN_FALSE,
 	// single tokens
 	TOKEN_ASSIGN,
 	TOKEN_LPARAN,
@@ -26,6 +34,7 @@ public enum TokenKind {
 	TOKEN_COLON,
 	TOKEN_QUESTION,
 	TOKEN_BITWISE,
+	TOKEN_COMMA,
 	// double tokens
 	TOKEN_EQUAL,
 	TOKEN_NOTEQUAL,
@@ -37,5 +46,5 @@ public enum TokenKind {
 	TOKEN_RIGHTSHIFT,
 	
 	// end
-	TOKEN_EOF,  
+	TOKEN_EOF,       
 }

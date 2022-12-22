@@ -42,7 +42,18 @@ public class Lexer {
 	}
 	private void initKeywords() {
 		this.keywords.put("if", TokenKind.TOKEN_IF);
+		this.keywords.put("bool", TokenKind.TOKEN_BOOL);
 		this.keywords.put("char", TokenKind.TOKEN_CHAR);
+		this.keywords.put("int", TokenKind.TOKEN_INT);
+		
+		this.keywords.put("fun", TokenKind.TOKEN_FUN);
+		this.keywords.put("struct", TokenKind.TOKEN_STRUCT);
+		this.keywords.put("enum", TokenKind.TOKEN_ENUM);
+		this.keywords.put("var", TokenKind.TOKEN_VAR);
+		this.keywords.put("true", TokenKind.TOKEN_TRUE);
+		this.keywords.put("false", TokenKind.TOKEN_FALSE);
+		
+		
 		
 				
 	}
@@ -56,7 +67,8 @@ public class Lexer {
 		while(!isAtEnd()) {
 			switch(chr()) {
 				case ' ':
-				case '\t':{
+				case '\t':
+				case '\n':{
 					while(!isAtEnd() && Character.isWhitespace(chr())) {
 						advance();
 					}
@@ -241,6 +253,13 @@ public class Lexer {
 					advance();
 					return new Token(TokenKind.TOKEN_SEMICOLON,";");
 				}
+				case ',':{
+					advance();
+					return new Token(TokenKind.TOKEN_COMMA,",");
+				}
+				
+				
+				
 				default:{
 					System.err.println("Skipped unknown character '%c'".formatted(chr()));
 					advance();

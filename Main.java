@@ -1,15 +1,19 @@
 package blaze;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 
 import blaze.ast.*;
+import blaze.Lexer;
 
 public class Main {
-	public static void main(String[] args) {
-		String example="**p";
+	public static void main(String[] args) throws IOException {
+		String example=new String(Files.readAllBytes(Paths.get("/home/mrprogrammez/eclipse-workspace/blaze/blaze/examples/basic.blz")));
 		
 		Lexer lex=new Lexer(example); //
-
 		Parser parser=new Parser(lex);
 		parser.parse();
 		/*Expression e=new BinaryOp(new Int(6), 2, new BinaryOp(new Int(2), 0, new Int(3)));

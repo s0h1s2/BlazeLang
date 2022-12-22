@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import blaze.ast.*;
+import blaze.types.*;
+
 import blaze.util.AstOperation;
 
 public class Parser {
@@ -31,25 +33,34 @@ public class Parser {
 		}
 	}
 	public List<Stmt> parse() {
-		// parse function declaration.
-		// type identifier '(' atomVariable ',' atomVariable* ')' '{' stmt ';' stmt*  '}'
-		// type name '=' expression ';'
-		// type-> 'int' | 'char'
-		// name->[a-zA-Z_][a-zA-Z_1-9]*
-		// expression-> equality
-		// equality-> addition '==' addition
-		// addition-> primary ('+'|'-') primary
-		// primary-> [0-9]*
-		//System.out.println(lex.getToken().getKind());
 		ArrayList<Stmt> stmts=new ArrayList<>();
-//		while(token.getKind()!=TokenKind.TOKEN_EOF) {
-//			stmts.add(atomVariable());
-//		}
-		//expression();
+		if(match(TokenKind.TOKEN_VAR)) {
+			stmts.add(parseVarDeclaration());
+		}
 		return stmts;
 		
 	}
-	
+	private Type parseType() {
+		if(match(TokenKind.TOKEN_INT)) {
+			return new IntType();
+		}else if(match(TokenKind.TOKEN_CHAR)) {
+			return new CharType();
+		}else if(match(TokenKind.TOKEN_BOOL)) {
+			return new BoolType();
+		}
+		throw new Error("Unimplemented type");
+	}
+	private Stmt parseVarDeclaration() {
+		expect(TokenKind.TOKEN_IDENTIFIER, "Expect identifier");
+		String name=prev.getValue().toString();
+		expect(TokenKind.TOKEN_COLON, "Expect ':'");
+		Type type=parseType();
+		Expression initExpr=null;
+		if(match(TokenKind.TOKEN_ASSIGN)) {
+			initExpr=expression();
+		}
+		return new VarDeclaration(name, initExpr, type);
+	}
 	private Expression expression() {
 		// lowest to highest precedence.
 		return ternary();
