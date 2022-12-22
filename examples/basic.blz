@@ -1,1 +1,5 @@
-var x:int=135;
+var b:int=124;
+var boolean:bool=156;
+
+var x:int=123+56+b+boolean;
+

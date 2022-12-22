@@ -34,9 +34,14 @@ public class Parser {
 	}
 	public List<Stmt> parse() {
 		ArrayList<Stmt> stmts=new ArrayList<>();
-		if(match(TokenKind.TOKEN_VAR)) {
-			stmts.add(parseVarDeclaration());
+		while(token.getKind()!=TokenKind.TOKEN_EOF) {
+			if(match(TokenKind.TOKEN_VAR)) {
+				stmts.add(parseVarDeclaration());
+			}
+			expect(TokenKind.TOKEN_SEMICOLON,"Expected ';' after statement");
 		}
+		
+		
 		return stmts;
 		
 	}
@@ -171,8 +176,14 @@ public class Parser {
 	private Expression primary() {
 		if(match(TokenKind.TOKEN_INTEGER)) {
 			return new Int((int)prev.getValue());
-		}else if(match(TokenKind.TOKEN_IDENTIFIER)) {
-			return new Int((int)1);
+		}else if(match(TokenKind.TOKEN_TRUE)) {
+			return new Bool(true);
+		}
+		else if(match(TokenKind.TOKEN_FALSE)) {
+			return new Bool(false);
+		}
+		else if(match(TokenKind.TOKEN_IDENTIFIER)) {
+			return new VariableExpression(prev.getValue().toString());
 		}
 		throw new Error("Syntax Error.");
 	}
