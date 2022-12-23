@@ -6,6 +6,7 @@ import java.nio.file.Paths;
 import java.util.List;
 
 import blaze.ast.*;
+import blaze.types.IntType;
 
 public class Main {
 	public static void main(String[] args) throws IOException {
@@ -14,11 +15,12 @@ public class Main {
 		Lexer lex=new Lexer(example); //
 		Parser parser=new Parser(lex);
 		List<Stmt> ast=parser.parse();
-		TypeChecker type=new TypeChecker(ast);
+		//SymbolTable("name",new VarDeclaration(example, null, null));
+		SymbolTable table=new SymbolTable();
+		//DeclarationResolver resolver=new DeclarationResolver(table, ast);
+		//resolver.resolve();
+		TypeChecker type=new TypeChecker(ast,table);
 		type.check();
-		//System.out.println();
-		//List<Stmt> stmts=parser.parse();
-		//System.out.println(stmts.get(0).getClass());
 	}
 
 }

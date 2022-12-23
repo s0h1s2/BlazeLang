@@ -118,6 +118,7 @@ public class Lexer {
 				case 'w':
 				case 'x':
 				case 'y':
+				case 'z':
 				case 'A':
 				case 'B':
 				case 'C':

@@ -11,5 +11,9 @@ public class VarDeclaration extends Declaration {
 		this.name=name;
 		this.type=type;
 	}
+	@Override
+	public Type getType() {
+		return this.type;
+	}
 	
 }

@@ -3,6 +3,7 @@ package blaze;
 import java.util.List;
 
 import blaze.ast.BinaryOp;
+import blaze.ast.Declaration;
 import blaze.ast.Int;
 import blaze.ast.Stmt;
 import blaze.ast.VarDeclaration;
@@ -11,12 +12,17 @@ import blaze.types.IntType;
 
 public class TypeChecker{
 	 private List<Stmt> ast;
-	 TypeChecker(List<Stmt> ast){
+	 private SymbolTable table;
+	 private DeclarationResolver declResolver;
+
+	 TypeChecker(List<Stmt> ast, SymbolTable table){
 		 this.ast=ast;
+		 this.table=table;
+		 this.declResolver=new DeclarationResolver(table);
 	 }
 	 private boolean isInt(Stmt stmt) {
 		 if(stmt instanceof VarDeclaration) {
-			if(((VarDeclaration) stmt).init!=null) {
+			if(((VarDeclaration) stmt).init!=null && ((VarDeclaration) stmt).type instanceof IntType ) {
 				return isInt(((VarDeclaration) stmt).init);
 			}
 		 }else if(stmt instanceof Int) {
@@ -27,28 +33,25 @@ public class TypeChecker{
 			 return left&&right;
 		 }
 		 else if(stmt instanceof VariableExpression) {
-			 // traverse the whole ast.
-			 for(int i=0;i<ast.size();i++) {
-				 if(ast.get(i) instanceof VarDeclaration) {
-					 if(((VarDeclaration) ast.get(i)).name.equals(((VariableExpression) stmt).name)) {
-						 return isInt(ast.get(i));
-					 }
-				 }
+			 String name=((VariableExpression) stmt).name;
+			 if(table.containDecl(name)) {
+				 return isInt(table.getDecl(name));
 			 }
-			 
-			 return false;
+			 throw new Error("Variable '"+name+"' Doesn't exist.");
+			 //return false;
 		 }
 		 return false;
 	 }
+	 
 	 public void check() {
-		 for (int i = 0; i < ast.size(); i++) {
-			 Stmt current=ast.get(i);
-			 if(current instanceof VarDeclaration) {
-				 if(((VarDeclaration)current).type instanceof IntType) {
-					 // check for integer type
-					 System.out.println(isInt(((VarDeclaration)current)));
-				 }
-			 }
-		 }
+		for (int i = 0; i < ast.size(); i++) {
+			Stmt stmt=ast.get(i);
+			if(stmt instanceof Declaration) {
+				declResolver.resolve(stmt);
+				if(((Declaration) stmt).getType() instanceof IntType) {
+					isInt(stmt);
+				}
+			}
+		}
 	 }
 }
