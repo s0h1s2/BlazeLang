@@ -35,7 +35,7 @@ public class TypeChecker{
 		 else if(stmt instanceof VariableExpression) {
 			 String name=((VariableExpression) stmt).name;
 			 if(table.containDecl(name)) {
-				 return isInt(table.getDecl(name));
+				 return table.getDecl(name) instanceof IntType;
 			 }
 			 throw new Error("Variable '"+name+"' Doesn't exist.");
 			 //return false;
@@ -47,11 +47,13 @@ public class TypeChecker{
 		for (int i = 0; i < ast.size(); i++) {
 			Stmt stmt=ast.get(i);
 			if(stmt instanceof Declaration) {
-				declResolver.resolve(stmt);
 				if(((Declaration) stmt).getType() instanceof IntType) {
-					isInt(stmt);
+					if(isInt(stmt)) {
+						declResolver.resolve(stmt);
+					}
 				}
 			}
+			
 		}
 	 }
 }

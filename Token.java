@@ -7,6 +7,9 @@ public class Token {
 		this.kind=kind;
 		this.value=value;
 	}
+	Token(TokenKind kind){
+		this.kind=kind;
+	}
 	public TokenKind getKind() {
 		return this.kind;
 	}

@@ -57,6 +57,10 @@ public class Lexer {
 		
 				
 	}
+	private Token makeSingleToken(TokenKind kind) {
+		advance();
+		return new Token(kind);
+	}
 	private boolean isAlpha(char c) {
 		return (c>='a' && c<='z') || (c>='A' && c<='Z');
 	}
@@ -162,6 +166,12 @@ public class Lexer {
 				case ')':
 					advance();
 					return new Token(TokenKind.TOKEN_RPARAN,')');
+				case '{':
+					advance();
+					return new Token(TokenKind.TOKEN_LBRACE, '{');
+				case '}':
+					advance();
+					return new Token(TokenKind.TOKEN_RBRACE, '{');
 				case '=':{
 					advance();
 					if(match('=')) {
@@ -185,8 +195,6 @@ public class Lexer {
 					}else if(match('<')) {
 						return new Token(TokenKind.TOKEN_LEFTSHIFT,"<<");
 					}
-					
-					
 					return new Token(TokenKind.TOKEN_LE,"<");
 					
 				}
@@ -213,7 +221,15 @@ public class Lexer {
 				}
 				case '/':{
 					advance();
-					return new Token(TokenKind.TOKEN_SLASH,"/");
+					if(match('/')) {
+						while(!isAtEnd() && !match('\n')) {
+							advance();
+						}
+						continue;
+					}else {
+						return new Token(TokenKind.TOKEN_SLASH,"/");	
+					}
+					
 				}
 				case '&':{
 					advance();
@@ -258,9 +274,6 @@ public class Lexer {
 					advance();
 					return new Token(TokenKind.TOKEN_COMMA,",");
 				}
-				
-				
-				
 				default:{
 					System.err.println("Skipped unknown character '%c'".formatted(chr()));
 					advance();

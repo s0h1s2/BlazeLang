@@ -20,7 +20,7 @@ public class DeclarationResolver{
 						System.err.println("Redeclare variable isn't allowed.");
 						return ;
 					}else {
-						table.define(((VarDeclaration) stmt).name, (Declaration)stmt);
+						table.define(((VarDeclaration) stmt).name, ((VarDeclaration)stmt).getType());
 					}
 				}
 			}

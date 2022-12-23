@@ -37,13 +37,53 @@ public class Parser {
 		while(token.getKind()!=TokenKind.TOKEN_EOF) {
 			if(match(TokenKind.TOKEN_VAR)) {
 				stmts.add(parseVarDeclaration());
+				expect(TokenKind.TOKEN_SEMICOLON,"Expected ';' after statement");
+			}else if(match(TokenKind.TOKEN_FUN)) {
+				stmts.add(parseFunctionDeclaration());
 			}
-			expect(TokenKind.TOKEN_SEMICOLON,"Expected ';' after statement");
+			
 		}
 		
 		
 		return stmts;
+	}
+	private List<Stmt> parseBlockStatement(){
+		List<Stmt> empty = null;	
+		return empty;		
+	}
+	private Parameter parseFunctionParameter() {
+		expect(TokenKind.TOKEN_IDENTIFIER, "Expected identiifer.");
+		String name=prev.getValue().toString();
+		Type type=parseType();
 		
+		return new Parameter(name, type);
+	}
+	private List<Parameter> parseFunctionParameters(){
+		List<Parameter> parameters=new ArrayList<Parameter>();
+		parameters.add(parseFunctionParameter());
+		while(match(TokenKind.TOKEN_COMMA)) {
+			parameters.add(parseFunctionParameter());	
+		}
+		return parameters;
+	}
+	
+	private Stmt parseFunctionDeclaration() {
+		List<Stmt> body=null;
+		Type returnType=null;
+		List<Parameter> parameters=null;
+		expect(TokenKind.TOKEN_IDENTIFIER, "Expect name after 'fun' keyword.");
+		String name=prev.getValue().toString();
+		expect(TokenKind.TOKEN_LPARAN, "Expect '('");
+		if(token.getKind() !=TokenKind.TOKEN_RPARAN) {
+			parameters=parseFunctionParameters();
+		}
+		expect(TokenKind.TOKEN_RPARAN, "Expected ')'");
+		expect(TokenKind.TOKEN_COLON, "Expected ':'");
+		returnType=parseType();
+		expect(TokenKind.TOKEN_LBRACE, "Expected '{'");
+		body=parseBlockStatement();
+		expect(TokenKind.TOKEN_RBRACE, "Expected '}'");
+		return new FunctionDeclaration(name,parameters,body,returnType);
 	}
 	private Type parseType() {
 		if(match(TokenKind.TOKEN_INT)) {
@@ -165,7 +205,7 @@ public class Parser {
 		return null;
 	}*/
 	private Expression unary() {
-		if(match(TokenKind.TOKEN_MINUS) || match(TokenKind.TOKEN_PLUS) || match(TokenKind.TOKEN_STAR) || match(TokenKind.TOKEN_BITAND)) {
+		if(match(TokenKind.TOKEN_BANG) || match(TokenKind.TOKEN_MINUS) || match(TokenKind.TOKEN_PLUS) || match(TokenKind.TOKEN_STAR) || match(TokenKind.TOKEN_BITAND)) {
 			return new Unary(AstOperation.getUnaryOperator(prev.getKind()), unary());
 		}else {
 			return primary();

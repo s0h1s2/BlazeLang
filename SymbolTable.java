@@ -2,16 +2,16 @@ package blaze;
 import java.util.HashMap;
 import java.util.Map;
 
-import blaze.ast.Declaration;;
+import blaze.types.Type;
 
 public class SymbolTable{
-	private Map<String,Declaration> decls;
+	private Map<String,Type> decls;
 	public SymbolTable() {
-		this.decls=new HashMap<String, Declaration>();
+		this.decls=new HashMap<String, Type>();
 	}
-	public boolean define(String name,Declaration decl) {
+	public boolean define(String name,Type type) {
 		if(!decls.containsKey(name)) {
-			decls.put(name,decl);
+			decls.put(name,type);
 			return true;
 		}
 		return false;
@@ -23,7 +23,7 @@ public class SymbolTable{
 		return false;
 	}
 	
-	public Declaration getDecl(String name) {
+	public Type getDecl(String name) {
 		if(decls.containsKey(name)) {
 			return decls.get(name);
 		}

@@ -35,6 +35,8 @@ public enum TokenKind {
 	TOKEN_QUESTION,
 	TOKEN_BITWISE,
 	TOKEN_COMMA,
+	TOKEN_LBRACE,
+	TOKEN_RBRACE,
 	// double tokens
 	TOKEN_EQUAL,
 	TOKEN_NOTEQUAL,
@@ -46,5 +48,5 @@ public enum TokenKind {
 	TOKEN_RIGHTSHIFT,
 	
 	// end
-	TOKEN_EOF,       
+	TOKEN_EOF,        
 }

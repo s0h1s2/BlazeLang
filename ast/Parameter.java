@@ -4,15 +4,14 @@ import blaze.types.Type;
 
 public class Parameter extends Declaration {
 	public String name;
-	public String type;
-	public Parameter(String name, String type) {
+	public Type type;
+	public Parameter(String name, Type type) {
 		super();
 		this.name = name;
 		this.type = type;
 	}
 	@Override
 	public Type getType() {
-		// TODO Auto-generated method stub
-		return null;
+		return this.type;
 	}
 }
