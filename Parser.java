@@ -46,8 +46,6 @@ public class Parser {
 			}
 			
 		}
-		
-		
 		return stmts;
 	}
 	private Stmt parseStatement() {
@@ -57,11 +55,21 @@ public class Parser {
 			return parseVarDeclaration();
 		}else if(match(TokenKind.TOKEN_WHILE)){
 			return parseWhileStatement();
+		}else if(match(TokenKind.TOKEN_RETURN)){
+			return parseReturn();
 		}else {
 			Expression expr= expression();
 			expect(TokenKind.TOKEN_SEMICOLON, "Expected ';'");
 			return expr;
 		}
+	}
+	private ReturnStatement parseReturn() {
+		Expression expr=null;
+		if(peek().getKind()!=TokenKind.TOKEN_SEMICOLON) {
+			expr=expression();
+		}
+		expect(TokenKind.TOKEN_SEMICOLON, "Expected ';'");
+		return new ReturnStatement(expr);
 	}
 	private WhileStatement parseWhileStatement() {
 		expect(TokenKind.TOKEN_LPARAN, "Expected '('");

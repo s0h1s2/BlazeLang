@@ -57,6 +57,7 @@ public class Lexer {
 		this.keywords.put("var", TokenKind.TOKEN_VAR);
 		this.keywords.put("true", TokenKind.TOKEN_TRUE);
 		this.keywords.put("false", TokenKind.TOKEN_FALSE);
+		this.keywords.put("return", TokenKind.TOKEN_RETURN);
 
 	}
 

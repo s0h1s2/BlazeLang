@@ -3,8 +3,6 @@
 //var y:int=x+z;
 
 fun functionName():int{
-	-1-1;
-	
 	var number:int=1245;
 	1+2334;
 	function(1,2);
@@ -17,6 +15,10 @@ fun functionName():int{
 		if(nestedAgain){
 			1+2334;
 		}
+	}
+	var x:int=0;
+	while(x<10){
+		return 1+1;
 	}
 }
 fun functionWithArguments(a:int,b:bool):int{

@@ -7,7 +7,6 @@ const y:int=124;
 enum TokenKind{
 	TOKEN_INTEGER=1;
 	TOKEN_FLOAT;
-	
 }
 struct Token{
 	TokenKind kind;
