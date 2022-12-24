@@ -14,13 +14,13 @@ public class Main {
 		
 		Lexer lex=new Lexer(example); //
 		Parser parser=new Parser(lex);
-		List<Stmt> ast=parser.parse();
+		/*List<Stmt> ast=*/parser.parse();
 		//SymbolTable("name",new VarDeclaration(example, null, null));
 		SymbolTable table=new SymbolTable();
 		//DeclarationResolver resolver=new DeclarationResolver(table, ast);
 		//resolver.resolve();
-		TypeChecker type=new TypeChecker(ast,table);
-		type.check();
+		//TypeChecker type=new TypeChecker(ast,table);
+		//type.check();
 	}
 
 }

@@ -20,6 +20,9 @@ public class Parser {
 		this.prev=this.token;
 		this.token=lex.getToken();
 	}
+	private Token peek() {
+		return this.token;
+	}
 	private boolean match(TokenKind kind) {
 		if(token.getKind()==kind) {
 			advance();
@@ -47,15 +50,39 @@ public class Parser {
 		
 		return stmts;
 	}
+	private Stmt parseStatement() {
+		if(match(TokenKind.TOKEN_IF)) {
+			return parseIfStatement();
+		}else {
+			return expression();
+		}
+	}
+	private IfStatement parseIfStatement() {
+		expect(TokenKind.TOKEN_LPARAN, "Expected '('");
+		Expression condition=expression();
+		expect(TokenKind.TOKEN_RPARAN, "Expected ')'");
+		List<Stmt> then=parseBlockStatement();
+		List<Stmt> els=null;
+		if(match(TokenKind.TOKEN_ELSE)) {
+			els=parseBlockStatement();
+		}
+		return new IfStatement(condition,then,els);
+	}
 	private List<Stmt> parseBlockStatement(){
-		List<Stmt> empty = null;	
-		return empty;		
+		List<Stmt> statements = new ArrayList<>();
+		expect(TokenKind.TOKEN_LBRACE, "Expected '{'");
+		while(!match(TokenKind.TOKEN_EOF) && peek().getKind()!=TokenKind.TOKEN_RBRACE) {
+			statements.add(parseStatement());
+		}
+		expect(TokenKind.TOKEN_RBRACE, "Expected '{'");
+		
+		return statements;
 	}
 	private Parameter parseFunctionParameter() {
 		expect(TokenKind.TOKEN_IDENTIFIER, "Expected identiifer.");
 		String name=prev.getValue().toString();
+		expect(TokenKind.TOKEN_COLON,"':' required.");
 		Type type=parseType();
-		
 		return new Parameter(name, type);
 	}
 	private List<Parameter> parseFunctionParameters(){
@@ -80,9 +107,7 @@ public class Parser {
 		expect(TokenKind.TOKEN_RPARAN, "Expected ')'");
 		expect(TokenKind.TOKEN_COLON, "Expected ':'");
 		returnType=parseType();
-		expect(TokenKind.TOKEN_LBRACE, "Expected '{'");
 		body=parseBlockStatement();
-		expect(TokenKind.TOKEN_RBRACE, "Expected '}'");
 		return new FunctionDeclaration(name,parameters,body,returnType);
 	}
 	private Type parseType() {

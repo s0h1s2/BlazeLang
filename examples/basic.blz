@@ -1,9 +1,11 @@
-var z:int=13455;
-var x:int=123+56+z;
-var y:int=x+z;
-fun functionName():int{
+//var z:int=13455;
+//var x:int=123+56+z;
+//var y:int=x+z;
 
+fun functionName():int{
+	if(someBoolFunction<=12){
+		
+	}
 }
 //fun functionWithArguments(a:int,b:bool):int{
-
 //}

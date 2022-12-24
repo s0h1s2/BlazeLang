@@ -42,6 +42,7 @@ public class Lexer {
 	}
 	private void initKeywords() {
 		this.keywords.put("if", TokenKind.TOKEN_IF);
+		this.keywords.put("else", TokenKind.TOKEN_ELSE);
 		this.keywords.put("bool", TokenKind.TOKEN_BOOL);
 		this.keywords.put("char", TokenKind.TOKEN_CHAR);
 		this.keywords.put("int", TokenKind.TOKEN_INT);
@@ -52,6 +53,7 @@ public class Lexer {
 		this.keywords.put("var", TokenKind.TOKEN_VAR);
 		this.keywords.put("true", TokenKind.TOKEN_TRUE);
 		this.keywords.put("false", TokenKind.TOKEN_FALSE);
+		
 		
 		
 		
