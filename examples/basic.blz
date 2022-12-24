@@ -3,9 +3,18 @@
 //var y:int=x+z;
 
 fun functionName():int{
-	if(someBoolFunction<=12){
+	1+2334;
+	function(1,2);
+	if(nested){
+		if(nestedAgain){
+			1+2334;
+		}
 		
+	}else{
+		if(nestedAgain){
+			1+2334;
+		}
 	}
 }
-//fun functionWithArguments(a:int,b:bool):int{
-//}
+fun functionWithArguments(a:int,b:bool):int{
+}

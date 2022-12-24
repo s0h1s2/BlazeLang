@@ -54,7 +54,9 @@ public class Parser {
 		if(match(TokenKind.TOKEN_IF)) {
 			return parseIfStatement();
 		}else {
-			return expression();
+			Expression expr= expression();
+			expect(TokenKind.TOKEN_SEMICOLON, "Expected ';'");
+			return expr;
 		}
 	}
 	private IfStatement parseIfStatement() {
@@ -233,11 +235,26 @@ public class Parser {
 		if(match(TokenKind.TOKEN_BANG) || match(TokenKind.TOKEN_MINUS) || match(TokenKind.TOKEN_PLUS) || match(TokenKind.TOKEN_STAR) || match(TokenKind.TOKEN_BITAND)) {
 			return new Unary(AstOperation.getUnaryOperator(prev.getKind()), unary());
 		}else {
-			return primary();
+			return call();
 		}
 		
 	}
-	
+	private Expression call() {
+		Expression expr=primary();
+		List<Expression> args=new ArrayList<>();
+		if(peek().getKind()==TokenKind.TOKEN_LPARAN) {
+			match(TokenKind.TOKEN_LPARAN);
+			if(peek().getKind()!=TokenKind.TOKEN_RPARAN) {
+				args.add(expression());
+				while(match(TokenKind.TOKEN_COMMA)) {
+					args.add(expression());	
+				}	
+			}
+			expect(TokenKind.TOKEN_RPARAN, "Expected ')'");
+			return new CallExpr(expr, args);
+		}
+		return expr;
+	}
 	private Expression primary() {
 		if(match(TokenKind.TOKEN_INTEGER)) {
 			return new Int((int)prev.getValue());
