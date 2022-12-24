@@ -3,6 +3,9 @@
 //var y:int=x+z;
 
 fun functionName():int{
+	-1-1;
+	
+	var number:int=1245;
 	1+2334;
 	function(1,2);
 	if(nested){

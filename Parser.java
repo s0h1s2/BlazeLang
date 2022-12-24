@@ -40,7 +40,7 @@ public class Parser {
 		while(token.getKind()!=TokenKind.TOKEN_EOF) {
 			if(match(TokenKind.TOKEN_VAR)) {
 				stmts.add(parseVarDeclaration());
-				expect(TokenKind.TOKEN_SEMICOLON,"Expected ';' after statement");
+				
 			}else if(match(TokenKind.TOKEN_FUN)) {
 				stmts.add(parseFunctionDeclaration());
 			}
@@ -53,24 +53,36 @@ public class Parser {
 	private Stmt parseStatement() {
 		if(match(TokenKind.TOKEN_IF)) {
 			return parseIfStatement();
+		}else if(match(TokenKind.TOKEN_VAR)){
+			return parseVarDeclaration();
+		}else if(match(TokenKind.TOKEN_WHILE)){
+			return parseWhileStatement();
 		}else {
 			Expression expr= expression();
 			expect(TokenKind.TOKEN_SEMICOLON, "Expected ';'");
 			return expr;
 		}
 	}
+	private WhileStatement parseWhileStatement() {
+		expect(TokenKind.TOKEN_LPARAN, "Expected '('");
+		Expression condition=expression();
+		expect(TokenKind.TOKEN_RPARAN, "Expected ')'");
+		BlockStatement block=parseBlockStatement();
+		
+		return new WhileStatement(condition, block);
+	}
 	private IfStatement parseIfStatement() {
 		expect(TokenKind.TOKEN_LPARAN, "Expected '('");
 		Expression condition=expression();
 		expect(TokenKind.TOKEN_RPARAN, "Expected ')'");
-		List<Stmt> then=parseBlockStatement();
-		List<Stmt> els=null;
+		BlockStatement then=parseBlockStatement();
+		BlockStatement els=null;
 		if(match(TokenKind.TOKEN_ELSE)) {
 			els=parseBlockStatement();
 		}
 		return new IfStatement(condition,then,els);
 	}
-	private List<Stmt> parseBlockStatement(){
+	private BlockStatement parseBlockStatement(){
 		List<Stmt> statements = new ArrayList<>();
 		expect(TokenKind.TOKEN_LBRACE, "Expected '{'");
 		while(!match(TokenKind.TOKEN_EOF) && peek().getKind()!=TokenKind.TOKEN_RBRACE) {
@@ -78,7 +90,7 @@ public class Parser {
 		}
 		expect(TokenKind.TOKEN_RBRACE, "Expected '{'");
 		
-		return statements;
+		return new BlockStatement(statements);
 	}
 	private Parameter parseFunctionParameter() {
 		expect(TokenKind.TOKEN_IDENTIFIER, "Expected identiifer.");
@@ -97,7 +109,7 @@ public class Parser {
 	}
 	
 	private Stmt parseFunctionDeclaration() {
-		List<Stmt> body=null;
+		BlockStatement body=null;
 		Type returnType=null;
 		List<Parameter> parameters=null;
 		expect(TokenKind.TOKEN_IDENTIFIER, "Expect name after 'fun' keyword.");
@@ -131,6 +143,7 @@ public class Parser {
 		if(match(TokenKind.TOKEN_ASSIGN)) {
 			initExpr=expression();
 		}
+		expect(TokenKind.TOKEN_SEMICOLON,"Expected ';' after statement");
 		return new VarDeclaration(name, initExpr, type);
 	}
 	private Expression expression() {
@@ -202,13 +215,6 @@ public class Parser {
 		return left;
 		
 	}
-	/*private Expression shift() {
-		Expression left=addition();
-		
-		
-		return null;
-	}*/
-	
 	private Expression addition() {
 		Expression left=multiplicative();
 		while(match(TokenKind.TOKEN_PLUS) || match(TokenKind.TOKEN_MINUS)) {
@@ -217,8 +223,6 @@ public class Parser {
 		return left;
 		
 	}
-	
-	
 	private Expression multiplicative() {
 		Expression left=unary();
 		while(match(TokenKind.TOKEN_STAR) || match(TokenKind.TOKEN_SLASH)) {
@@ -227,10 +231,6 @@ public class Parser {
 		return left;
 		
 	}
-	/*private Expression cast() {
-		
-		return null;
-	}*/
 	private Expression unary() {
 		if(match(TokenKind.TOKEN_BANG) || match(TokenKind.TOKEN_MINUS) || match(TokenKind.TOKEN_PLUS) || match(TokenKind.TOKEN_STAR) || match(TokenKind.TOKEN_BITAND)) {
 			return new Unary(AstOperation.getUnaryOperator(prev.getKind()), unary());
@@ -270,22 +270,4 @@ public class Parser {
 		throw new Error("Syntax Error.");
 	}
 }
-/*private Stmt atomVariable() {
-if(match(TokenKind.TOKEN_CHAR)) {
-	expect(TokenKind.TOKEN_IDENTIFIER,"Expected a variable name.");
-	// check if next token is '(' then it's function declaration.
-	// otherwise it is an identifier.
-	 
-	String name=(String)prev.getValue();
-	Expression init=null;
-	if(match(TokenKind.TOKEN_ASSIGN)) {
-		init=expression();
-	}
-	expect(TokenKind.TOKEN_SEMICOLON, "Expected ';' after statement.");
-	return new VarStmt(name,init);
-}else {
-	return expression();
-}
-//throw new Error("Unreachable");
 
-}*/

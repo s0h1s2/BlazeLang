@@ -17,6 +17,7 @@ public enum TokenKind {
 	TOKEN_TRUE,
 	TOKEN_FALSE,
 	TOKEN_ELSE,
+	TOKEN_WHILE,
 	// single tokens
 	TOKEN_ASSIGN,
 	TOKEN_LPARAN,
@@ -49,5 +50,5 @@ public enum TokenKind {
 	TOKEN_RIGHTSHIFT,
 	
 	// end
-	TOKEN_EOF,         
+	TOKEN_EOF,          
 }
