@@ -32,7 +32,6 @@ import blaze.ast.WhileStatement;
 public class VisitorTesting implements IVisitor {
 	@Override
 	public Stmt visit(Stmt stmt) {
-
 		return stmt.accept(this);
 	}
 	

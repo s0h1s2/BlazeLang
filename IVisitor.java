@@ -29,5 +29,7 @@ public interface IVisitor {
 	public Stmt visit(BlockStatement block);
 	public Stmt visit(VarStmt varStmt);
 	public Stmt visit(ReturnStatement returnStatement);
+	public Stmt visit(Assignment assignment);
+	
 	Stmt visit(Stmt stmt);
 }

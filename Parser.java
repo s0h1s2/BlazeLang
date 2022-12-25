@@ -156,9 +156,21 @@ public class Parser {
 		expect(TokenKind.TOKEN_SEMICOLON,"Expected ';' after statement");
 		return new VarDeclaration(name, initExpr, type);
 	}
+	
 	private Expression expression() {
 		// lowest to highest precedence.
-		return ternary();
+		return assignment();
+	}
+	private Expression assignment() {
+		Expression left=ternary();
+		
+		if(match(TokenKind.TOKEN_ASSIGN)) {
+			if(!(left instanceof VariableExpression)) {
+				throw new Error("only identifier can be assigned.");
+			}
+			left=new Assignment(left,assignment());
+		}
+		return left;
 	}
 	private Expression ternary(){
 		Expression expr=logicalOr();
