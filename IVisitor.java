@@ -30,6 +30,6 @@ public interface IVisitor {
 	public Stmt visit(VarStmt varStmt);
 	public Stmt visit(ReturnStatement returnStatement);
 	public Stmt visit(Assignment assignment);
+	public Stmt visit(Program program);
 	
-	Stmt visit(Stmt stmt);
 }

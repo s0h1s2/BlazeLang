@@ -14,13 +14,10 @@ public class Main {
 		
 		Lexer lex=new Lexer(example); //
 		Parser parser=new Parser(lex);
-		List<Stmt> ast=parser.parse();
-		
+		Program ast=parser.parse();
 		SymbolTable table=new SymbolTable();
-		
 		VisitorTesting visitor=new VisitorTesting();
-		visitor.visit(ast.get(0));
-		
+		visitor.visit(ast);
 	}
 
 }

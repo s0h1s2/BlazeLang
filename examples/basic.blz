@@ -4,6 +4,6 @@ var z:int=13455;
 
 fun hello():int{
 	var x:int;
-	x=y=123;
+	var x:int=a;
 	
 }

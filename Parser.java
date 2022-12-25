@@ -35,20 +35,21 @@ public class Parser {
 			throw new Error(err);
 		}
 	}
-	public List<Stmt> parse() {
-		ArrayList<Stmt> stmts=new ArrayList<>();
+	public Program parse() {
+		ArrayList<Declaration> decls=new ArrayList<>();
 		while(token.getKind()!=TokenKind.TOKEN_EOF) {
 			if(match(TokenKind.TOKEN_VAR)) {
-				stmts.add(parseVarDeclaration());
+				decls.add(parseVarDeclaration());
 				
 			}else if(match(TokenKind.TOKEN_FUN)) {
-				stmts.add(parseFunctionDeclaration());
+				decls.add(parseFunctionDeclaration());
 			}else {
 				throw new Error("Unexpected declaration.");
 			}
 			
 		}
-		return stmts;
+		return new Program(decls);
+
 	}
 	private Stmt parseStatement() {
 		if(match(TokenKind.TOKEN_IF)) {
@@ -118,7 +119,7 @@ public class Parser {
 		return parameters;
 	}
 	
-	private Stmt parseFunctionDeclaration() {
+	private Declaration parseFunctionDeclaration() {
 		BlockStatement body=null;
 		Type returnType=null;
 		List<Parameter> parameters=null;
@@ -144,7 +145,7 @@ public class Parser {
 		}
 		throw new Error("Unimplemented type");
 	}
-	private Stmt parseVarDeclaration() {
+	private Declaration parseVarDeclaration() {
 		expect(TokenKind.TOKEN_IDENTIFIER, "Expect identifier");
 		String name=prev.getValue().toString();
 		expect(TokenKind.TOKEN_COLON, "Expect ':'");
@@ -166,7 +167,7 @@ public class Parser {
 		
 		if(match(TokenKind.TOKEN_ASSIGN)) {
 			if(!(left instanceof VariableExpression)) {
-				throw new Error("only identifier can be assigned.");
+				throw new Error("Only identifier can be assigned.");
 			}
 			left=new Assignment(left,assignment());
 		}

@@ -12,6 +12,7 @@
 package blaze;
 
 
+import blaze.ast.Assignment;
 import blaze.ast.BinaryOp;
 import blaze.ast.BlockStatement;
 import blaze.ast.Bool;
@@ -20,6 +21,7 @@ import blaze.ast.FunctionDeclaration;
 import blaze.ast.IfStatement;
 import blaze.ast.Int;
 import blaze.ast.Parameter;
+import blaze.ast.Program;
 import blaze.ast.ReturnStatement;
 import blaze.ast.Stmt;
 import blaze.ast.Ternary;
@@ -30,11 +32,7 @@ import blaze.ast.VariableExpression;
 import blaze.ast.WhileStatement;
 
 public class VisitorTesting implements IVisitor {
-	@Override
-	public Stmt visit(Stmt stmt) {
-		return stmt.accept(this);
-	}
-	
+
 	@Override
 	public Stmt visit(IfStatement ifStatement) {
 		ifStatement.condition.accept(this);
@@ -133,6 +131,20 @@ public class VisitorTesting implements IVisitor {
 	@Override
 	public Stmt visit(ReturnStatement returnStatement) {
 		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Stmt visit(Assignment assignment) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Stmt visit(Program program) {
+		for (int i = 0; i < program.getDeclarations().size(); i++) {
+			program.getDeclarations().get(i).accept(this);
+		}
 		return null;
 	}
 
