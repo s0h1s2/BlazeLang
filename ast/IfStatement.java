@@ -1,9 +1,10 @@
 package blaze.ast;
 
-import java.util.List;
+import blaze.IVisitable;
+import blaze.IVisitor;
 
-public class IfStatement extends Stmt{
-	Expression condition;
+public class IfStatement extends Stmt implements IVisitable {
+	public Expression condition;
 	BlockStatement then;
 	BlockStatement els;
 	public IfStatement(Expression condition, BlockStatement then, BlockStatement els) {
@@ -11,6 +12,9 @@ public class IfStatement extends Stmt{
 		this.condition = condition;
 		this.then = then;
 		this.els = els;
+	}
+	public Stmt accept(IVisitor visitor) {
+		return visitor.visit(this);
 	}
 	
 }

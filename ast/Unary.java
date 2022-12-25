@@ -1,5 +1,6 @@
 package blaze.ast;
 
+import blaze.IVisitor;
 import blaze.util.AstOperators.AstUnaryOperator;
 
 public class Unary extends Expression {
@@ -9,5 +10,9 @@ public class Unary extends Expression {
 		super();
 		this.op = op;
 		this.right = right;
+	}
+	@Override
+	public Stmt accept(IVisitor visitor) {
+		return visitor.visit(this);
 	}	
 }

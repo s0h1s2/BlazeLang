@@ -1,6 +1,7 @@
 package blaze.ast;
 
-public abstract class Expression extends Stmt {
-	//public abstract <T> T getValue();
+import blaze.IVisitable;
+
+public abstract class Expression extends Stmt implements IVisitable {
 	
 }

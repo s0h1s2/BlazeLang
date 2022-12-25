@@ -1,25 +1,10 @@
-//var z:int=13455;
+var z:int=13455;
 //var x:int=123+56+z;
 //var y:int=x+z;
 
-fun functionName():int{
-	var number:int=1245;
-	1+2334;
-	function(1,2);
-	if(nested){
-		if(nestedAgain){
-			1+2334;
-		}
-		
-	}else{
-		if(nestedAgain){
-			1+2334;
-		}
+fun hello():int{
+	if(1+1>5){
+		var x:int=1;
+	
 	}
-	var x:int=0;
-	while(x<10){
-		return 1+1;
-	}
-}
-fun functionWithArguments(a:int,b:bool):int{
 }

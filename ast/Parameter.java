@@ -1,5 +1,6 @@
 package blaze.ast;
 
+import blaze.IVisitor;
 import blaze.types.Type;
 
 public class Parameter extends Declaration {
@@ -13,5 +14,9 @@ public class Parameter extends Declaration {
 	@Override
 	public Type getType() {
 		return this.type;
+	}
+	@Override
+	public Stmt accept(IVisitor visitor) {
+		return visitor.visit(this);
 	}
 }

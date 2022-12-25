@@ -22,6 +22,25 @@ fun max(a:int,b:int):int{
 fun add(a:int,b:int):*int{
 	return a+b;
 }
-
-
+fun functionName():int{
+	var number:int=1245;
+	1+2334;
+	function(1,2);
+	if(nested){
+		if(nestedAgain){
+			1+2334;
+		}
+		
+	}else{
+		if(nestedAgain){
+			1+2334;
+		}
+	}
+	var x:int=0;
+	while(x<10){
+		return 1+1;
+	}
+}
+fun functionWithArguments(a:int,b:bool):int{
+}
 

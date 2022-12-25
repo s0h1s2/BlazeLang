@@ -43,6 +43,8 @@ public class Parser {
 				
 			}else if(match(TokenKind.TOKEN_FUN)) {
 				stmts.add(parseFunctionDeclaration());
+			}else {
+				throw new Error("Unexpected declaration.");
 			}
 			
 		}

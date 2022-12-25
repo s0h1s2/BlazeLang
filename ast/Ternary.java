@@ -1,6 +1,9 @@
 package blaze.ast;
 
-public class Ternary extends Expression {
+import blaze.IVisitable;
+import blaze.IVisitor;
+
+public class Ternary extends Expression implements IVisitable {
 	Expression expr;
 	Expression then;
 	Expression elseExpr;
@@ -9,6 +12,10 @@ public class Ternary extends Expression {
 		this.expr = expr;
 		this.then = then;
 		this.elseExpr = elseExpr;
+	}
+	@Override
+	public Stmt accept(IVisitor visitor) {
+		return visitor.visit(this);
 	}
 	
 }

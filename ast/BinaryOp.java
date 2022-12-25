@@ -1,5 +1,6 @@
 package blaze.ast;
 
+import blaze.IVisitor;
 import blaze.util.AstOperators.AstBinaryOperator;
 
 public class BinaryOp extends Expression {
@@ -11,6 +12,10 @@ public class BinaryOp extends Expression {
 		this.left = left;
 		this.op = op;
 		this.right = right;
+	}
+	@Override
+	public Stmt accept(IVisitor visitor) {
+		return visitor.visit(this);
 	}
 
 	

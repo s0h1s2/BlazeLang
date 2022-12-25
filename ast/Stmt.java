@@ -1,5 +1,7 @@
 package blaze.ast;
 
-public abstract class Stmt {
+import blaze.IVisitable;
 
+
+public abstract class Stmt implements IVisitable{
 }
