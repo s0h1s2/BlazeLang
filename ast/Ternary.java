@@ -14,8 +14,8 @@ public class Ternary extends Expression implements IVisitable {
 		this.elseExpr = elseExpr;
 	}
 	@Override
-	public Stmt accept(IVisitor visitor) {
-		return visitor.visit(this);
+	public void accept(IVisitor<?> visitor) {
+		visitor.visit(this);
 	}
 	
 }

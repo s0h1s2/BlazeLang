@@ -12,8 +12,8 @@ public class Int extends Expression {
 		return this.x;
 	}
 	@Override
-	public Stmt accept(IVisitor visitor) {
-		return visitor.visit(this);
+	public void accept(IVisitor<?> visitor) {
+		visitor.visit(this);
 	}
 
 }

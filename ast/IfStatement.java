@@ -13,8 +13,8 @@ public class IfStatement extends Stmt implements IVisitable {
 		this.then = then;
 		this.els = els;
 	}
-	public Stmt accept(IVisitor visitor) {
-		return visitor.visit(this);
+	public void accept(IVisitor<?> visitor) {
+		visitor.visit(this);
 	}
 	
 }

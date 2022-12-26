@@ -12,8 +12,8 @@ public class CallExpr extends Expression {
 		this.args=args;
 	}
 	@Override
-	public Stmt accept(IVisitor visitor) {
-		return visitor.visit(this);
+	public void accept(IVisitor<?> visitor) {
+		visitor.visit(this);
 	}
 	
 }

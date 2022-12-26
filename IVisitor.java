@@ -13,23 +13,23 @@ package blaze;
 
 import blaze.ast.*;
 
-public interface IVisitor {
-	public Stmt visit(IfStatement ifStatement);
-	public Stmt visit(CallExpr callExpr);
-	public Stmt visit(Int integer);
-	public Stmt visit(BinaryOp binOp);
-	public Stmt visit(Bool bool);
-	public Stmt visit(Ternary ternary);
-	public Stmt visit(VariableExpression varExpression);
-	public Stmt visit(Unary unary);
-	public Stmt visit(FunctionDeclaration functionDeclaration);
-	public Stmt visit(Parameter parameter);
-	public Stmt visit(VarDeclaration varDeclaration);
-	public Stmt visit(WhileStatement whileStatement);
-	public Stmt visit(BlockStatement block);
-	public Stmt visit(VarStmt varStmt);
-	public Stmt visit(ReturnStatement returnStatement);
-	public Stmt visit(Assignment assignment);
-	public Stmt visit(Program program);
+public interface IVisitor<T> {
+	public T visit(IfStatement ifStatement);
+	public T visit(CallExpr callExpr);
+	public T visit(Int integer);
+	public T  visit(BinaryOp binOp);
+	public T visit(Bool bool);
+	public T visit(Ternary ternary);
+	public T visit(VariableExpression varExpression);
+	public T visit(Unary unary);
+	public T visit(FunctionDeclaration functionDeclaration);
+	public T visit(Parameter parameter);
+	public T visit(VarDeclaration varDeclaration);
+	public T visit(WhileStatement whileStatement);
+	public T visit(BlockStatement block);
+	public T visit(VarStmt varStmt);
+	public T visit(ReturnStatement returnStatement);
+	public T visit(Assignment assignment);
+	public T visit(Program program);
 	
 }

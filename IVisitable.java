@@ -1,5 +1,5 @@
 /*
-** Dec 25, 2022 Shkar Sardar
+	** Dec 25, 2022 Shkar Sardar
 **
 ** The author disclaims copyright to this source code.  In place of
 ** a legal notice, here is a blessing:
@@ -10,7 +10,7 @@
 **
 */
 package blaze;
-import blaze.ast.Stmt;
+
 public interface IVisitable {
-	public Stmt accept(IVisitor visitor);
+	public void accept(IVisitor<?> visitor);
 }

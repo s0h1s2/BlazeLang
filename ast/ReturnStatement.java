@@ -9,8 +9,8 @@ public class ReturnStatement extends Stmt{
 		this.returnExpression = returnExpression;
 	}
 	@Override
-	public Stmt accept(IVisitor visitor) {
-		return visitor.visit(this);
+	public void accept(IVisitor<?> visitor) {
+		visitor.visit(this);
 		
 	}
 }

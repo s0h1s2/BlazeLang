@@ -10,9 +10,8 @@ public class Program implements IVisitable{
 	public Program(List<Declaration> declarations) {
 		this.declarations=declarations;
 	}
-	public Stmt accept(IVisitor visitor) {
+	public void accept(IVisitor<?> visitor) {
 		visitor.visit(this);
-		return null;
 	}
 	public List<Declaration> getDeclarations() {
 		return declarations;

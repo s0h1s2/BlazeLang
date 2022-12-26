@@ -11,7 +11,7 @@ import blaze.ast.VariableExpression;
 import blaze.types.IntType;
 
 public class TypeChecker{
-	 private List<Stmt> ast;
+	/* private List<Stmt> ast;
 	 private SymbolTable table;
 	 private DeclarationResolver declResolver;
 
@@ -55,5 +55,5 @@ public class TypeChecker{
 			}
 			
 		}
-	 }
+	 }*/
 }

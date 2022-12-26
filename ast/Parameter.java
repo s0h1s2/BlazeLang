@@ -16,7 +16,7 @@ public class Parameter extends Declaration {
 		return this.type;
 	}
 	@Override
-	public Stmt accept(IVisitor visitor) {
-		return visitor.visit(this);
+	public void accept(IVisitor<?> visitor) {
+		visitor.visit(this);
 	}
 }

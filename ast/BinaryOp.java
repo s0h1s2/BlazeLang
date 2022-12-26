@@ -14,8 +14,8 @@ public class BinaryOp extends Expression {
 		this.right = right;
 	}
 	@Override
-	public Stmt accept(IVisitor visitor) {
-		return visitor.visit(this);
+	public void accept(IVisitor<?> visitor) {
+		visitor.visit(this);
 	}
 
 	
