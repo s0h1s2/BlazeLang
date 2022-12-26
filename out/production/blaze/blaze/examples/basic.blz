@@ -1,0 +1,23 @@
+var z:int=13455;
+//var x:int=123+56+z;
+//var y:int=x+z;
+
+fun hello():int{
+	1;	
+}
+fun print():int{
+		// linux kernel stuff.
+		1;
+}
+fun fib(test:int):int{
+	// this a test to make sure the parsing works correctly.
+	var x:int=0;
+	var y:int=1;
+	var sum:int=0;
+	var increment:int=0;
+	while(increment<test){
+		sum=sum+y;
+		increment=increment+1;
+	}
+	return sum;
+}
