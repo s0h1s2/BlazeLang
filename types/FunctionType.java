@@ -12,6 +12,12 @@
 
 package blaze.types;
 
-public abstract class Type {
-    
+import blaze.SymbolTable;
+
+public class FunctionType extends Type {
+    SymbolTable localAndParam;
+
+    public FunctionType(SymbolTable localAndParam) {
+        this.localAndParam = localAndParam;
+    }
 }

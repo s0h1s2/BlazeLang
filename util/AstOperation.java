@@ -1,5 +1,5 @@
 /*
- ** Dec 26,2022 Shkar Sardar
+ ** Dec 27,2022 Shkar Sardar
  **
  ** The author disclaims copyright to this source code.  In place of
  ** a legal notice, here is a blessing:
@@ -19,14 +19,17 @@ import java.util.Map;
 import blaze.TokenKind;
 import blaze.util.AstOperators.AstBinaryOperator;
 import blaze.util.AstOperators.AstUnaryOperator;
+import blaze.util.AstOperators.AstModifyOperator;
 
 public abstract class AstOperation {
     private static Map<TokenKind, AstBinaryOperator> binaryOperations;
     private static Map<TokenKind, AstUnaryOperator> unaryOperations;
+    private static Map<TokenKind, AstModifyOperator> modifyOperations;
 
     static {
         HashMap<TokenKind, AstBinaryOperator> bi = new HashMap<>();
         HashMap<TokenKind, AstUnaryOperator> ui = new HashMap<>();
+        HashMap<TokenKind, AstModifyOperator> mi = new HashMap<>();
         bi.put(TokenKind.TOKEN_OR, AstBinaryOperator.OPERATOR_OR);
         bi.put(TokenKind.TOKEN_AND, AstBinaryOperator.OPERATOR_AND);
         bi.put(TokenKind.TOKEN_BITOR, AstBinaryOperator.OPERATOR_BITOR);
@@ -46,16 +49,24 @@ public abstract class AstOperation {
         ui.put(TokenKind.TOKEN_MINUS, AstUnaryOperator.OPERATOR_NEGATIVE);
         ui.put(TokenKind.TOKEN_STAR, AstUnaryOperator.OPERATOR_DEREFERENCE);
         ui.put(TokenKind.TOKEN_BITAND, AstUnaryOperator.OPERATOR_GETADDRESS);
+        mi.put(TokenKind.TOKEN_INCREMENT, AstModifyOperator.OPERATOR_INCREMENT_POSTFIX);
+        mi.put(TokenKind.TOKEN_INCREMENT, AstModifyOperator.OPERATOR_DECREMENT_POSTFIX);
 
         binaryOperations = Collections.unmodifiableMap(bi);
         unaryOperations = Collections.unmodifiableMap(ui);
-
+        modifyOperations = Collections.unmodifiableMap(mi);
     }
 
     public static AstBinaryOperator getBinaryOperator(TokenKind kind) {
         return binaryOperations.get(kind);
 
     }
+
+    public static AstModifyOperator getModifyOperator(TokenKind kind) {
+        return modifyOperations.get(kind);
+
+    }
+
 
     public static AstUnaryOperator getUnaryOperator(TokenKind kind) {
         return unaryOperations.get(kind);

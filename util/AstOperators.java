@@ -1,5 +1,5 @@
 /*
- ** Dec 26,2022 Shkar Sardar
+ ** Dec 27,2022 Shkar Sardar
  **
  ** The author disclaims copyright to this source code.  In place of
  ** a legal notice, here is a blessing:
@@ -22,6 +22,10 @@ public abstract class AstOperators {
 
     public enum AstUnaryOperator {
         OPERATOR_DEREFERENCE, OPERATOR_GETADDRESS, OPERATOR_NEGATIVE, OPERATOR_POSITIVE,
+    }
+
+    public enum AstModifyOperator {
+        OPERATOR_INCREMENT_POSTFIX, OPERATOR_DECREMENT_POSTFIX
     }
 
 }

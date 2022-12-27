@@ -1,5 +1,5 @@
 /*
- ** Dec 26,2022 Shkar Sardar
+ ** Dec 27,2022 Shkar Sardar
  **
  ** The author disclaims copyright to this source code.  In place of
  ** a legal notice, here is a blessing:
@@ -284,26 +284,16 @@ public class Parser {
     }
 
     private Expression multiplicative() {
-        Expression left = unary();
+        Expression left = call();
         while (match(TokenKind.TOKEN_STAR) || match(TokenKind.TOKEN_SLASH)) {
-            left = new BinaryOp(left, AstOperation.getBinaryOperator(prev.getKind()), unary());
+            left = new BinaryOp(left, AstOperation.getBinaryOperator(prev.getKind()), call());
         }
         return left;
 
     }
 
-    private Expression unary() {
-        if (match(TokenKind.TOKEN_BANG) || match(TokenKind.TOKEN_MINUS) || match(TokenKind.TOKEN_PLUS)
-                || match(TokenKind.TOKEN_STAR) || match(TokenKind.TOKEN_BITAND)) {
-            return new Unary(AstOperation.getUnaryOperator(prev.getKind()), unary());
-        } else {
-            return call();
-        }
-
-    }
-
     private Expression call() {
-        Expression expr = primary();
+        Expression expr = unary();
         List<Expression> args = new ArrayList<>();
         if (peek().getKind() == TokenKind.TOKEN_LPARAN) {
             match(TokenKind.TOKEN_LPARAN);
@@ -319,6 +309,24 @@ public class Parser {
         return expr;
     }
 
+    private Expression unary() {
+        if (match(TokenKind.TOKEN_BANG) || match(TokenKind.TOKEN_MINUS) || match(TokenKind.TOKEN_PLUS)
+                || match(TokenKind.TOKEN_STAR) || match(TokenKind.TOKEN_BITAND)) {
+            return new Unary(AstOperation.getUnaryOperator(prev.getKind()), unary());
+        } else {
+            return postfix();
+        }
+
+    }
+
+    private Expression postfix() {
+        Expression left = primary();
+        if (match(TokenKind.TOKEN_INCREMENT) || match(TokenKind.TOKEN_DECREMENT)) {
+            left = new Modify(left, AstOperation.getModifyOperator(prev.getKind()));
+        }
+        return left;
+    }
+
     private Expression primary() {
         if (match(TokenKind.TOKEN_INTEGER)) {
             return new Int((int) prev.getValue());
@@ -329,6 +337,6 @@ public class Parser {
         } else if (match(TokenKind.TOKEN_IDENTIFIER)) {
             return new VariableExpression(prev.getValue().toString());
         }
-        throw new Error("Syntax Error.");
+        throw new Error("Syntax Error");
     }
 }

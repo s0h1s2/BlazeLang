@@ -1,5 +1,5 @@
 /*
- ** Dec 26,2022 Shkar Sardar
+ ** Dec 27,2022 Shkar Sardar
  **
  ** The author disclaims copyright to this source code.  In place of
  ** a legal notice, here is a blessing:
@@ -20,15 +20,16 @@ import blaze.ast.*;
 
 public class Main {
     public static void main(String[] args) throws IOException {
-        String example = new String(
-                Files.readAllBytes(Paths.get("/home/mrprogrammez/eclipse-workspace/blaze/blaze/examples/basic.blz")));
 
+        // TODO: check if file or files or directory exist
+        String example = new String(
+                Files.readAllBytes(Paths.get("/home/mrprogrammez/IdeaProjects/blaze/examples/basic.blz")));
         Lexer lex = new Lexer(example); //
         Parser parser = new Parser(lex);
         Program ast = parser.parse();
         SymbolTable table = new SymbolTable();
-        //DeclarationResolver binder = new DeclarationResolver(table);
-        //binder.visit(ast);
+        DeclarationResolver binder = new DeclarationResolver(table);
+        binder.visit(ast);
 
     }
 

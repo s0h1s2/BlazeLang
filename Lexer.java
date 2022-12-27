@@ -1,5 +1,5 @@
 /*
- ** Dec 26,2022 Shkar Sardar
+ ** Dec 27,2022 Shkar Sardar
  **
  ** The author disclaims copyright to this source code.  In place of
  ** a legal notice, here is a blessing:
@@ -222,10 +222,10 @@ public class Lexer {
                     return new Token(TokenKind.TOKEN_GE, ">");
                 }
                 case '+': {
-                    return makeSingleToken(TokenKind.TOKEN_PLUS);
+                    return makeDoubleToken(TokenKind.TOKEN_PLUS, '+', TokenKind.TOKEN_INCREMENT);
                 }
                 case '-': {
-                    return makeSingleToken(TokenKind.TOKEN_MINUS);
+                    return makeDoubleToken(TokenKind.TOKEN_MINUS, '-', TokenKind.TOKEN_DECREMENT);
                 }
                 case '*': {
                     return makeSingleToken(TokenKind.TOKEN_STAR);

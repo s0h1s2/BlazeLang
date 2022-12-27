@@ -1,5 +1,5 @@
 /*
- ** Dec 26,2022 Shkar Sardar
+ ** Dec 27,2022 Shkar Sardar
  **
  ** The author disclaims copyright to this source code.  In place of
  ** a legal notice, here is a blessing:
@@ -23,7 +23,7 @@ public enum TokenKind {
     TOKEN_BANG, TOKEN_LE, TOKEN_GE, TOKEN_BITAND, TOKEN_BITOR, TOKEN_MODULO, TOKEN_COLON, TOKEN_QUESTION, TOKEN_BITWISE,
     TOKEN_COMMA, TOKEN_LBRACE, TOKEN_RBRACE,
     // double tokens
-    TOKEN_EQUAL, TOKEN_NOTEQUAL, TOKEN_LEQ, TOKEN_GEQ, TOKEN_AND, TOKEN_OR, TOKEN_LEFTSHIFT, TOKEN_RIGHTSHIFT,
+    TOKEN_EQUAL, TOKEN_NOTEQUAL, TOKEN_LEQ, TOKEN_GEQ, TOKEN_AND, TOKEN_OR, TOKEN_LEFTSHIFT, TOKEN_RIGHTSHIFT, TOKEN_INCREMENT, TOKEN_DECREMENT,
 
     // end
     TOKEN_EOF,

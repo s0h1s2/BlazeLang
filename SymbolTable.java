@@ -1,5 +1,5 @@
 /*
- ** Dec 26,2022 Shkar Sardar
+ ** Dec 27,2022 Shkar Sardar
  **
  ** The author disclaims copyright to this source code.  In place of
  ** a legal notice, here is a blessing:
@@ -20,8 +20,15 @@ import blaze.types.Type;
 public class SymbolTable {
     private Map<String, Type> decls;
 
+    private SymbolTable prev;
+
+    // fib int
     public SymbolTable() {
         this.decls = new HashMap<String, Type>();
+    }
+
+    public SymbolTable(SymbolTable prev) {
+        this.prev = prev;
     }
 
     public boolean define(String name, Type type) {

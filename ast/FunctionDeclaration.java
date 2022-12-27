@@ -1,5 +1,5 @@
 /*
- ** Dec 26,2022 Shkar Sardar
+ ** Dec 27,2022 Shkar Sardar
  **
  ** The author disclaims copyright to this source code.  In place of
  ** a legal notice, here is a blessing:
@@ -18,10 +18,10 @@ import blaze.IVisitor;
 import blaze.types.Type;
 
 public class FunctionDeclaration extends Declaration {
-    String name;
-    List<Parameter> parameters;
-    BlockStatement statements;
-    Type returnType;
+    public String name;
+    public List<Parameter> parameters;
+    public BlockStatement statements;
+    public Type returnType;
 
     public FunctionDeclaration(String name, List<Parameter> parameters, BlockStatement statements, Type returnType) {
         super();

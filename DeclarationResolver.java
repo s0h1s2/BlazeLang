@@ -1,5 +1,5 @@
 /*
- ** Dec 26,2022 Shkar Sardar
+ ** Dec 27,2022 Shkar Sardar
  **
  ** The author disclaims copyright to this source code.  In place of
  ** a legal notice, here is a blessing:
@@ -12,87 +12,173 @@
 package blaze;
 
 import blaze.ast.*;
+import blaze.types.FunctionType;
+import blaze.types.Type;
+
+import java.util.Stack;
 
 public class DeclarationResolver implements IVisitor<Void> {
+    private SymbolTable table;
+    private Stack<SymbolTable> scopes;
+
+    public DeclarationResolver(SymbolTable table) {
+
+        this.table = table;
+        this.scopes = new Stack();
+    }
+
+    private void enterScope() {
+        this.scopes.push(new SymbolTable());
+    }
+
+    private void leaveScope() {
+        this.scopes.pop();
+    }
+
+    private void declare(String name, Type type) {
+        if (scopes.empty()) {
+            if (!table.containDecl(name)) {
+                table.define(name, type);
+            } else {
+                throw new Error("Can't redeclare '" + name + "'.");
+            }
+        } else {
+            if (!scopes.peek().containDecl(name)) {
+                scopes.peek().define(name, type);
+            } else {
+                throw new Error("Can't redeclare '" + name + "'.");
+            }
+        }
+    }
+
+    private void resolve(String name) {
+        if (!scopes.empty()) {
+            if (scopes.peek().containDecl(name)) {
+                return;
+            }
+        }
+        if (!table.containDecl(name)) {
+            throw new Error("'" + name + "' not found.");
+        }
+
+    }
 
     @Override
     public Void visit(IfStatement ifStatement) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        return null;
     }
 
     @Override
     public Void visit(CallExpr callExpr) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        return null;
     }
 
     @Override
     public Void visit(Int integer) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+
+        return null;
     }
 
     @Override
     public Void visit(BinaryOp binOp) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        binOp.left.accept(this);
+        binOp.right.accept(this);
+        return null;
     }
 
     @Override
     public Void visit(Bool bool) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        return null;
     }
 
     @Override
     public Void visit(Ternary ternary) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        return null;
     }
 
     @Override
     public Void visit(VariableExpression varExpression) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        resolve(varExpression.name);
+        return null;
     }
 
     @Override
     public Void visit(Unary unary) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        return null;
     }
 
     @Override
     public Void visit(FunctionDeclaration functionDeclaration) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        if (table.containDecl(functionDeclaration.name)) {
+            throw new Error("Can't redeclare function '" + functionDeclaration.name + "'.");
+        }
+        enterScope();
+        if (!functionDeclaration.parameters.isEmpty()) {
+            for (Parameter param : functionDeclaration.parameters) {
+                declare(param.name, param.type);
+            }
+        }
+        functionDeclaration.statements.accept(this);
+        table.define(functionDeclaration.name, new FunctionType(scopes.firstElement()));
+        leaveScope();
+        return null;
+
     }
 
     @Override
     public Void visit(Parameter parameter) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        return null;
     }
 
     @Override
     public Void visit(VarDeclaration varDeclaration) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        declare(varDeclaration.name, varDeclaration.type);
+        if (varDeclaration.init != null) {
+            varDeclaration.init.accept(this);
+        }
+        return null;
     }
 
     @Override
     public Void visit(WhileStatement whileStatement) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        whileStatement.condition.accept(this);
+        whileStatement.block.accept(this);
+        return null;
     }
+
 
     @Override
     public Void visit(BlockStatement block) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        for (Stmt stmt : block.stmts) {
+            stmt.accept(this);
+        }
+        return null;
     }
 
     @Override
     public Void visit(ReturnStatement returnStatement) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        returnStatement.returnExpression.accept(this);
+        return null;
     }
 
     @Override
     public Void visit(Assignment assignment) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        assignment.left.accept(this);
+        assignment.right.accept(this);
+        return null;
     }
 
     @Override
     public Void visit(Program program) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        for (int i = 0; i < program.getDeclarations().size(); i++) {
+            program.getDeclarations().get(i).accept(this);
+        }
+        return null;
     }
 
+    @Override
+    public Void visit(Modify modify) {
+        modify.left.accept(this);
+        return null;
+    }
 }
