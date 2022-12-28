@@ -312,6 +312,7 @@ public class Parser {
         Expression expr = unary();
         List<Expression> args = new ArrayList<>();
         if (peek().getKind() == TokenKind.TOKEN_LPARAN) {
+            // TODO: not sure to check weather calle name is instanceof VariableExperssion currently we assume  that is VariableExpression instance and now we just extract the name.
             match(TokenKind.TOKEN_LPARAN);
             if (peek().getKind() != TokenKind.TOKEN_RPARAN) {
                 args.add(expression());
@@ -320,7 +321,7 @@ public class Parser {
                 }
             }
             expect(TokenKind.TOKEN_RPARAN, "Expected ')'");
-            return new CallExpr(expr, args);
+            return new CallExpr(((VariableExpression) expr).name, args);
         }
         return expr;
     }

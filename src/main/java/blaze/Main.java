@@ -16,7 +16,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
-import blaze.ast.*;
+import blaze.ast.Program;
 
 public class Main {
     public static void main(String[] args) throws IOException {
@@ -29,7 +29,7 @@ public class Main {
         SymbolTable table = new SymbolTable();
         DeclarationResolver binder = new DeclarationResolver(table);
         binder.visit(ast);
-
+        int y=135;
     }
 
 }

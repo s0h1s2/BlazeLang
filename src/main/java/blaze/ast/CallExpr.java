@@ -17,11 +17,11 @@ import java.util.List;
 import blaze.IVisitor;
 
 public class CallExpr extends Expression {
-    public Expression expr;
+    public String name;
     public List<Expression> args;
 
-    public CallExpr(Expression expr, List<Expression> args) {
-        this.expr = expr;
+    public CallExpr(String name, List<Expression> args) {
+        this.name = name;
         this.args = args;
     }
 

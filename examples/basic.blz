@@ -9,7 +9,8 @@ fun fact(x:int):int{
 
 fun main(argc:int):int{
     var z:int;
-    z=fact(5);
+    hello();
+    z=fact(z);
     {
         z=z+1;
     }
@@ -24,5 +25,8 @@ fun main(argc:int):int{
         var x:int=1234;
     }
     return 0;
+
+}
+fun hello():int{
 
 }

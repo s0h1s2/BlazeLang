@@ -79,7 +79,6 @@ public class DeclarationResolver implements IVisitor<Void> {
 
     @Override
     public Void visit(CallExpr callExpr) {
-        callExpr.expr.accept(this);
         for (Expression arg : callExpr.args) {
             arg.accept(this);
         }
