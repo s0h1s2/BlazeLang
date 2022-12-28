@@ -13,11 +13,9 @@
 package blaze.ast;
 
 import java.util.List;
-
-import blaze.IVisitable;
 import blaze.IVisitor;
 
-public class BlockStatement extends Stmt implements IVisitable {
+public class BlockStatement extends Stmt {
     public List<Stmt> stmts;
 
     public BlockStatement(List<Stmt> stmts) {
@@ -25,8 +23,8 @@ public class BlockStatement extends Stmt implements IVisitable {
     }
 
     @Override
-    public void accept(IVisitor<?> visitor) {
-        visitor.visit(this);
+    public Object accept(IVisitor<?> visitor) {
+        return visitor.visit(this);
     }
 
 }

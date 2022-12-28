@@ -14,10 +14,9 @@ package blaze.ast;
 
 import java.util.List;
 
-import blaze.IVisitable;
 import blaze.IVisitor;
 
-public class IfStatement extends Stmt implements IVisitable {
+public class IfStatement extends Stmt {
     public Expression condition;
     public BlockStatement then;
     public List<IfStatement> elseIfs;
@@ -31,8 +30,8 @@ public class IfStatement extends Stmt implements IVisitable {
         this.elseIfs=elseIfs;
     }
 
-    public void accept(IVisitor<?> visitor) {
-        visitor.visit(this);
+    public Object accept(IVisitor<?> visitor) {
+        return visitor.visit(this);
     }
 
 }

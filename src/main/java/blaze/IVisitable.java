@@ -13,5 +13,5 @@
 package blaze;
 
 public interface IVisitable {
-    public void accept(IVisitor<?> visitor);
+    public Object accept(IVisitor<?> visitor);
 }

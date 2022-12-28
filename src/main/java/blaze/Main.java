@@ -29,7 +29,7 @@ public class Main {
         SymbolTable table = new SymbolTable();
         DeclarationResolver binder = new DeclarationResolver(table);
         binder.visit(ast);
-        int y=135;
+        
     }
 
 }

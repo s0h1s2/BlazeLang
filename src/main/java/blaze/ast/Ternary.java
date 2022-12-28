@@ -12,10 +12,9 @@
 
 package blaze.ast;
 
-import blaze.IVisitable;
 import blaze.IVisitor;
 
-public class Ternary extends Expression implements IVisitable {
+public class Ternary extends Expression {
     public Expression expr;
     public Expression then;
     public Expression elseExpr;
@@ -28,8 +27,8 @@ public class Ternary extends Expression implements IVisitable {
     }
 
     @Override
-    public void accept(IVisitor<?> visitor) {
-        visitor.visit(this);
+    public Object accept(IVisitor<?> visitor) {
+        return visitor.visit(this);
     }
 
 }

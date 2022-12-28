@@ -23,8 +23,8 @@ public class Bool extends Expression {
     }
 
     @Override
-    public void accept(IVisitor<?> visitor) {
-        visitor.visit(this);
+    public Object accept(IVisitor<?> visitor) {
+        return visitor.visit(this);
     }
 
 }

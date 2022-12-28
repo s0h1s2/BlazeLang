@@ -134,8 +134,8 @@ public class DeclarationResolver implements IVisitor<Void> {
                 declare(param.name, param.type);
             }
         }
-        table.define(functionDeclaration.name, new FunctionType(scopes.firstElement()));
         functionDeclaration.statements.accept(this);
+        table.define(functionDeclaration.name, new FunctionType(scopes.firstElement()));
         leaveScope();
         return null;
 

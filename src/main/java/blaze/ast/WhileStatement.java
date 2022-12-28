@@ -11,11 +11,9 @@
  */
 
 package blaze.ast;
-
-import blaze.IVisitable;
 import blaze.IVisitor;
 
-public class WhileStatement extends Stmt implements IVisitable {
+public class WhileStatement extends Stmt {
     public Expression condition;
     public BlockStatement block;
 
@@ -26,8 +24,8 @@ public class WhileStatement extends Stmt implements IVisitable {
     }
 
     @Override
-    public void accept(IVisitor<?> visitor) {
-        visitor.visit(this);
+    public Object accept(IVisitor<?> visitor) {
+        return visitor.visit(this);
     }
 
 }
