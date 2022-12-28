@@ -1,3 +1,5 @@
 *.class
 blaze.iml
 .idea/
+.vscode/
+target/

@@ -1,5 +1,5 @@
 /*
- ** Dec 26,2022 Shkar Sardar
+ ** Dec 28,2022 Shkar Sardar
  **
  ** The author disclaims copyright to this source code.  In place of
  ** a legal notice, here is a blessing:
@@ -16,9 +16,9 @@ import blaze.IVisitable;
 import blaze.IVisitor;
 
 public class Ternary extends Expression implements IVisitable {
-    Expression expr;
-    Expression then;
-    Expression elseExpr;
+    public Expression expr;
+    public Expression then;
+    public Expression elseExpr;
 
     public Ternary(Expression expr, Expression then, Expression elseExpr) {
         super();

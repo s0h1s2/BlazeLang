@@ -1,5 +1,5 @@
 /*
- ** Dec 27,2022 Shkar Sardar
+ ** Dec 28,2022 Shkar Sardar
  **
  ** The author disclaims copyright to this source code.  In place of
  ** a legal notice, here is a blessing:
@@ -22,7 +22,6 @@ public class SymbolTable {
 
     private SymbolTable prev;
 
-    // fib int
     public SymbolTable() {
         this.decls = new HashMap<String, Type>();
     }

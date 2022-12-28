@@ -1,5 +1,5 @@
 /*
- ** Dec 27,2022 Shkar Sardar
+ ** Dec 28,2022 Shkar Sardar
  **
  ** The author disclaims copyright to this source code.  In place of
  ** a legal notice, here is a blessing:
@@ -9,6 +9,7 @@
  **    May you share freely, never taking more than you give.
  **
  */
+
 package blaze;
 
 import blaze.ast.*;
@@ -18,13 +19,13 @@ import blaze.types.Type;
 import java.util.Stack;
 
 public class DeclarationResolver implements IVisitor<Void> {
-    private SymbolTable table;
-    private Stack<SymbolTable> scopes;
+    final private SymbolTable table;
+    final private Stack<SymbolTable> scopes;
 
     public DeclarationResolver(SymbolTable table) {
 
         this.table = table;
-        this.scopes = new Stack();
+        this.scopes = new Stack<>();
     }
 
     private void enterScope() {
@@ -65,11 +66,23 @@ public class DeclarationResolver implements IVisitor<Void> {
 
     @Override
     public Void visit(IfStatement ifStatement) {
+        ifStatement.condition.accept(this);
+        if (ifStatement.then != null) {
+            ifStatement.then.accept(this);
+        }
+        if (ifStatement.els != null) {
+            ifStatement.els.accept(this);
+        }
+
         return null;
     }
 
     @Override
     public Void visit(CallExpr callExpr) {
+        callExpr.expr.accept(this);
+        for (Expression arg : callExpr.args) {
+            arg.accept(this);
+        }
         return null;
     }
 
@@ -93,6 +106,9 @@ public class DeclarationResolver implements IVisitor<Void> {
 
     @Override
     public Void visit(Ternary ternary) {
+        ternary.expr.accept(this);
+        ternary.then.accept(this);
+        ternary.elseExpr.accept(this);
         return null;
     }
 
@@ -104,6 +120,7 @@ public class DeclarationResolver implements IVisitor<Void> {
 
     @Override
     public Void visit(Unary unary) {
+        unary.accept(this);
         return null;
     }
 
@@ -113,13 +130,13 @@ public class DeclarationResolver implements IVisitor<Void> {
             throw new Error("Can't redeclare function '" + functionDeclaration.name + "'.");
         }
         enterScope();
-        if (!functionDeclaration.parameters.isEmpty()) {
+        if (functionDeclaration.parameters != null) {
             for (Parameter param : functionDeclaration.parameters) {
                 declare(param.name, param.type);
             }
         }
-        functionDeclaration.statements.accept(this);
         table.define(functionDeclaration.name, new FunctionType(scopes.firstElement()));
+        functionDeclaration.statements.accept(this);
         leaveScope();
         return null;
 
@@ -157,7 +174,10 @@ public class DeclarationResolver implements IVisitor<Void> {
 
     @Override
     public Void visit(ReturnStatement returnStatement) {
-        returnStatement.returnExpression.accept(this);
+        if (returnStatement.returnExpression != null) {
+            returnStatement.returnExpression.accept(this);
+        }
+
         return null;
     }
 
@@ -181,4 +201,5 @@ public class DeclarationResolver implements IVisitor<Void> {
         modify.left.accept(this);
         return null;
     }
+
 }

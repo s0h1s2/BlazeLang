@@ -1,5 +1,5 @@
 /*
- ** Dec 26,2022 Shkar Sardar
+ ** Dec 28,2022 Shkar Sardar
  **
  ** The author disclaims copyright to this source code.  In place of
  ** a legal notice, here is a blessing:
@@ -10,7 +10,17 @@
  **
  */
 
-package blaze;
+package blaze;/*
+ ** Dec 28,2022 Shkar Sardar
+ **
+ ** The author disclaims copyright to this source code.  In place of
+ ** a legal notice, here is a blessing:
+ **
+ **    May you do good and not evil.
+ **    May you find forgiveness for yourself and forgive others.
+ **    May you share freely, never taking more than you give.
+ **
+ */
 
 import java.util.List;
 
@@ -24,11 +34,11 @@ import blaze.types.IntType;
 
 public class TypeChecker {
     /*
-     * private List<Stmt> ast; private SymbolTable table; private
-     * DeclarationResolver declResolver;
+     * private List<Stmt> ast; private blaze.SymbolTable table; private
+     * blaze.DeclarationResolver declResolver;
      *
-     * TypeChecker(List<Stmt> ast, SymbolTable table){ this.ast=ast;
-     * this.table=table; this.declResolver=new DeclarationResolver(table); } private
+     * blaze.TypeChecker(List<Stmt> ast, blaze.SymbolTable table){ this.ast=ast;
+     * this.table=table; this.declResolver=new blaze.DeclarationResolver(table); } private
      * boolean isInt(Stmt stmt) { if(stmt instanceof VarDeclaration) {
      * if(((VarDeclaration) stmt).init!=null && ((VarDeclaration) stmt).type
      * instanceof IntType ) { return isInt(((VarDeclaration) stmt).init); } }else

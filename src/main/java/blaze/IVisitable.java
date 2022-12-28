@@ -1,5 +1,5 @@
 /*
- ** Dec 26,2022 Shkar Sardar
+ ** Dec 28,2022 Shkar Sardar
  **
  ** The author disclaims copyright to this source code.  In place of
  ** a legal notice, here is a blessing:
@@ -9,6 +9,7 @@
  **    May you share freely, never taking more than you give.
  **
  */
+
 package blaze;
 
 public interface IVisitable {

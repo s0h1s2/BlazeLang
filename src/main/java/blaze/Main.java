@@ -1,5 +1,5 @@
 /*
- ** Dec 27,2022 Shkar Sardar
+ ** Dec 28,2022 Shkar Sardar
  **
  ** The author disclaims copyright to this source code.  In place of
  ** a legal notice, here is a blessing:
@@ -20,7 +20,6 @@ import blaze.ast.*;
 
 public class Main {
     public static void main(String[] args) throws IOException {
-
         // TODO: check if file or files or directory exist
         String example = new String(
                 Files.readAllBytes(Paths.get("/home/mrprogrammez/IdeaProjects/blaze/examples/basic.blz")));

@@ -1,29 +1,24 @@
 var z:int=12;
 var x:int=z;
-fun programmer(x:int):int{
-    return 1+1;
+fun fact(x:int):int{
+    if(x<=0){
+        return 1;
+    }
+    return x*fact(x-1);
 }
 
+fun main(argc:int):int{
+    var z:int;
+    z=fact(5);
+    {
+        z=z+1;
+    }
+    if(x==1){
+    }else if(x==2){
+        // it kinda works.
+    }else{
 
+    }
+    return 0;
 
-//fun invalidFunc():char{
-//  var x:int=z;
-//  return 567;
-//}
-//fun testIncrement():int{
-//    var x:int=123;
-//    x++;
-//    x--;
-//}
-//fun fib(test:int):int{
-//	// this a test to make sure the parsing works correctly.
-//	var x:int=0;
-//	var y:int=1;
-//	var sum:int=0;
-//	var increment:int=0;
-//	while(increment<test){
-//		sum=sum+y;
-//		increment++;
-//	}
-//	return sum;
-//}
+}

@@ -1,5 +1,5 @@
 /*
- ** Dec 27,2022 Shkar Sardar
+ ** Dec 28,2022 Shkar Sardar
  **
  ** The author disclaims copyright to this source code.  In place of
  ** a legal notice, here is a blessing:
@@ -59,7 +59,6 @@ public class Parser {
         while (token.getKind() != TokenKind.TOKEN_EOF) {
             if (match(TokenKind.TOKEN_VAR)) {
                 decls.add(parseVarDeclaration());
-
             } else if (match(TokenKind.TOKEN_FUN)) {
                 decls.add(parseFunctionDeclaration());
             } else {
@@ -80,6 +79,8 @@ public class Parser {
             return parseWhileStatement();
         } else if (match(TokenKind.TOKEN_RETURN)) {
             return parseReturn();
+        } else if (peek().getKind() == TokenKind.TOKEN_LBRACE) {
+            return parseBlockStatement();
         } else {
             Expression expr = expression();
             expect(TokenKind.TOKEN_SEMICOLON, "Expected ';'");
@@ -110,11 +111,15 @@ public class Parser {
         Expression condition = expression();
         expect(TokenKind.TOKEN_RPARAN, "Expected ')'");
         BlockStatement then = parseBlockStatement();
-        BlockStatement els = null;
+        Stmt els = null;
         if (match(TokenKind.TOKEN_ELSE)) {
-            els = parseBlockStatement();
+            if (match(TokenKind.TOKEN_IF)) {
+                els = parseIfStatement();
+            } else {
+                els = parseBlockStatement();
+            }
         }
-        return new IfStatement(condition, then, els);
+        return new IfStatement(condition, then, null);
     }
 
     private BlockStatement parseBlockStatement() {
