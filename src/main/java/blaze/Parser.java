@@ -105,21 +105,32 @@ public class Parser {
 
         return new WhileStatement(condition, block);
     }
-
+    
     private IfStatement parseIfStatement() {
         expect(TokenKind.TOKEN_LPARAN, "Expected '('");
         Expression condition = expression();
         expect(TokenKind.TOKEN_RPARAN, "Expected ')'");
         BlockStatement then = parseBlockStatement();
-        Stmt els = null;
-        if (match(TokenKind.TOKEN_ELSE)) {
-            if (match(TokenKind.TOKEN_IF)) {
-                els = parseIfStatement();
-            } else {
-                els = parseBlockStatement();
+        BlockStatement els = null;
+        List<IfStatement> elseIfs=new ArrayList<>();
+        if (peek().getKind()==TokenKind.TOKEN_ELSE) {
+            while(match(TokenKind.TOKEN_ELSE)){
+                if(peek().getKind()==TokenKind.TOKEN_IF){
+                    match(TokenKind.TOKEN_IF);
+                    expect(TokenKind.TOKEN_LPARAN, "Expected '('");
+                    Expression elseIfcondition = expression();
+                    expect(TokenKind.TOKEN_RPARAN, "Expected ')'");
+                    BlockStatement elseIfThen=parseBlockStatement();
+                    elseIfs.add(new IfStatement(elseIfcondition, elseIfThen, null,null));
+                }else{
+                    els=parseBlockStatement();
+                }
+                
             }
+            
+
         }
-        return new IfStatement(condition, then, null);
+        return new IfStatement(condition, then, elseIfs,els);
     }
 
     private BlockStatement parseBlockStatement() {

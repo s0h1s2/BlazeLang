@@ -22,7 +22,7 @@ public class Main {
     public static void main(String[] args) throws IOException {
         // TODO: check if file or files or directory exist
         String example = new String(
-                Files.readAllBytes(Paths.get("/home/mrprogrammez/IdeaProjects/blaze/examples/basic.blz")));
+                Files.readAllBytes(Paths.get("/home/mrprogrammez/Desktop/blaze/examples/basic.blz")));
         Lexer lex = new Lexer(example); //
         Parser parser = new Parser(lex);
         Program ast = parser.parse();
