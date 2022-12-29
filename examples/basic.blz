@@ -1,33 +1,56 @@
-var z:int=12;
-var x:int=z;
-fun fact(x:int):int{
-    if(x<=0){
-        return 1;
-    }
-    return x*fact(x-1);
-}
+var x:int=12;
 
-fun main(argc:int):int{
-    var z:int;
-    hello();
-    z=fact(z);
-    {
-        z=z+1;
-    }
+// struct Person{
+// 	name:char;
+// 	age:int;
+
+// }
+// fun createPerson():Person{
+// 	var person:Person;
+// 	person.name='a';
+// 	person.age=12;
+// 	return person;
+	
+// }
+
+// var y:int=x=2;
+// var z:int=12+5+6/x;
+
+
+// fun fact(x:int):int{
+//     if(x<=0){
+//         return 1;
+//     }
+//     return x*fact(x-1);
+// }
+
+// fun main(argc:int):int{
+//     var z:int;
+//     hello();
+//     z=fact(z);
+//     {
+//         z=z+1;
+//     }
     
-    if(x==1){
-    }else if(x==2){
-        // it kinda works.
-        if(x==1){
-            var hello:bool=true;
+//     if(x==1){
+//     }else if(x==2){
+//         // it kinda works.
+//         if(x==1){
+//             var hello:bool=true;
 
-        }
-    }else{
-        var x:int=1234;
-    }
-    return 0;
+//         }
+//     }else{
+//         var x:int=1234;
+//     }
+//     return 0;
 
-}
-fun hello():int{
+// }
+// fun hello():int{
 
+// }
+fun main():bool{
+	if(x==12){
+		// do some more calculation.
+	}	
+	return;
 }

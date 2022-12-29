@@ -24,6 +24,7 @@ import blaze.ast.Modify;
 import blaze.ast.Parameter;
 import blaze.ast.Program;
 import blaze.ast.ReturnStatement;
+import blaze.ast.Stmt;
 import blaze.ast.Ternary;
 import blaze.ast.Unary;
 import blaze.ast.VarDeclaration;
@@ -34,16 +35,18 @@ import blaze.types.IntType;
 import blaze.types.Type;
 
 public class TypeChecker implements IVisitor<Type> {
-    private Program program;
     private SymbolTable table;
-    public TypeChecker(Program program,SymbolTable table){
-        this.program=program;
+    public TypeChecker(SymbolTable table){
         this.table=table;
     }
     @Override
     public Type visit(IfStatement ifStatement) {
-        
-        return null;
+        Type conditionType=(Type)ifStatement.condition.accept(this);
+        if(conditionType instanceof BoolType){
+            // goto block declaration
+            return conditionType;
+        }
+        throw new Error("If statement must have boolean condition.");
     }
 
     @Override
@@ -65,46 +68,34 @@ public class TypeChecker implements IVisitor<Type> {
             case OPERATOR_SUBTRACT:
             case OPERATOR_MULTIPLY:
             case OPERATOR_DIVIDE:{
-                // make sure left and right are integer;
                 Type leftType=(Type)binOp.left.accept(this);
                 Type rightType=(Type)binOp.right.accept(this);
-                if(leftType instanceof IntType && rightType instanceof IntType){
+                if(leftType.equals(rightType)){
                     return leftType;
                 }
                 throw new Error("Left and right must be int.");
             }
-            case OPERATOR_AND:
-                break;
             case OPERATOR_BITAND:
                 break;
             case OPERATOR_BITOR:
                 break;
             case OPERATOR_BITWISE:
                 break;
-           
+            case OPERATOR_AND:
             case OPERATOR_EQUAL:
-                break;
             case OPERATOR_GE:
-                break;
             case OPERATOR_GEQ:
-                break;
-            case OPERATOR_GREATERTHAN:
-                break;
-            case OPERATOR_GREATERTHANEQUAL:
-                break;
             case OPERATOR_LE:
-                break;
             case OPERATOR_LEQ:
-                break;
-            case OPERATOR_LESSTHAN:
-                break;
-            case OPERATOR_LESSTHANEQUAL:
-                break;
             case OPERATOR_NOEQUAL:
-                break;
-            case OPERATOR_OR:
-                break;
-            
+            case OPERATOR_OR:{
+                Type leftType=(Type)binOp.left.accept(this);
+                Type rightType=(Type)binOp.right.accept(this);
+                if(leftType.equals(rightType)){
+                    return new BoolType();
+                }
+                throw new Error("Left and Right must be same type.");
+            }
             default:
                 break;
             
@@ -114,8 +105,7 @@ public class TypeChecker implements IVisitor<Type> {
 
     @Override
     public Type visit(Bool bool) {
-        
-        return null;
+        return new BoolType();
     }
 
     @Override
@@ -126,8 +116,7 @@ public class TypeChecker implements IVisitor<Type> {
 
     @Override
     public Type visit(VariableExpression varExpression) {
-        
-        return null;
+        return table.getDecl(varExpression.name);
     }
 
     @Override
@@ -138,6 +127,7 @@ public class TypeChecker implements IVisitor<Type> {
 
     @Override
     public Type visit(FunctionDeclaration functionDeclaration) {
+        functionDeclaration.statements.accept(this);
         
         return null;
     }
@@ -150,8 +140,17 @@ public class TypeChecker implements IVisitor<Type> {
 
     @Override
     public Type visit(VarDeclaration varDeclaration) {
-        
-        return null;
+        Type init=null;
+        if(varDeclaration.init!=null){
+            init=(Type)varDeclaration.init.accept(this);
+            if(varDeclaration.type.equals(init)){
+                return varDeclaration.type;
+                
+            }else{
+                throw new Error("variable and expression must be same type");
+            }
+        }
+        return varDeclaration.type;
     }
 
     @Override
@@ -162,7 +161,9 @@ public class TypeChecker implements IVisitor<Type> {
 
     @Override
     public Type visit(BlockStatement block) {
-        
+        for (Stmt stmt : block.stmts) {
+            stmt.accept(this);
+        }
         return null;
     }
 
@@ -180,8 +181,11 @@ public class TypeChecker implements IVisitor<Type> {
 
     @Override
     public Type visit(Program program) {
-        
+        for(int i=0;i<program.getDeclarations().size();i++){
+            program.getDeclarations().get(i).accept(this);
+        }
         return null;
+
     }
 
     @Override

@@ -14,4 +14,8 @@ package blaze.types;
 
 public abstract class Type {
     
-}
+    public boolean equals(Type type){
+        if(type==null) return false;
+        return this.getClass()==type.getClass();
+    }
+} 

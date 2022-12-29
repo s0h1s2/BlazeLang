@@ -353,6 +353,10 @@ public class Parser {
             return new Bool(false);
         } else if (match(TokenKind.TOKEN_IDENTIFIER)) {
             return new VariableExpression(prev.getValue().toString());
+        }else if(match(TokenKind.TOKEN_LPARAN)){
+            Expression expr=expression();
+            expect(TokenKind.TOKEN_RPARAN, "Expected ')'.");
+            return expr;
         }
         throw new Error("Syntax Error");
     }
