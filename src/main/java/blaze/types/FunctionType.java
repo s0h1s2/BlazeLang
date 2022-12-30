@@ -15,9 +15,11 @@ package blaze.types;
 import blaze.SymbolTable;
 
 public class FunctionType extends Type {
-    SymbolTable localAndParam;
-
+    private SymbolTable localAndParam;
     public FunctionType(SymbolTable localAndParam) {
         this.localAndParam = localAndParam;
+    }
+    public SymbolTable getTable(){
+        return localAndParam;
     }
 }

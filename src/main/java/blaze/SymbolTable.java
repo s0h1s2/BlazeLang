@@ -14,22 +14,33 @@ package blaze;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 import blaze.types.Type;
 
 public class SymbolTable {
     private Map<String, Type> decls;
-
-    private SymbolTable prev;
-
+    private SymbolTable parent;
     public SymbolTable() {
         this.decls = new HashMap<String, Type>();
+        this.parent=null;
     }
-
-    public SymbolTable(SymbolTable prev) {
-        this.prev = prev;
+    public SymbolTable(SymbolTable parent) {
+        this.decls = new HashMap<String, Type>();
+        this.parent = parent;
     }
-
+    public SymbolTable getParent(){
+        return this.parent;
+    }
+    public Set<String> getKeys(){
+        return this.decls.keySet();
+    }
+    public boolean haveParent(){
+        if(this.parent==null){
+            return false;
+        }
+        return true;
+    }
     public boolean define(String name, Type type) {
         if (!decls.containsKey(name)) {
             decls.put(name, type);
@@ -39,17 +50,17 @@ public class SymbolTable {
     }
 
     public boolean containDecl(String name) {
-        if (decls.containsKey(name)) {
+        if (decls!=null && decls.containsKey(name) ) {
             return true;
         }
         return false;
     }
 
     public Type getDecl(String name) {
-        if (decls.containsKey(name)) {
+        if (containDecl(name)) {
             return decls.get(name);
         }
         return null;
-    }
+    }   
 
 }

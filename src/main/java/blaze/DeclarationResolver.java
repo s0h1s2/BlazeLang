@@ -29,7 +29,10 @@ public class DeclarationResolver implements IVisitor<Void> {
     }
 
     private void enterScope() {
-        this.scopes.push(new SymbolTable());
+        if(!this.scopes.empty()){
+            this.scopes.push(new SymbolTable(this.scopes.peek()));
+        }
+        this.scopes.push(new SymbolTable(table));
     }
 
     private void leaveScope() {
@@ -70,10 +73,12 @@ public class DeclarationResolver implements IVisitor<Void> {
         if (ifStatement.then != null) {
             ifStatement.then.accept(this);
         }
+        if(ifStatement.elseIfs!=null){
+            ifStatement.elseIfs.forEach((stmt)->stmt.accept(this));
+        }
         if (ifStatement.els != null) {
             ifStatement.els.accept(this);
         }
-
         return null;
     }
 
@@ -137,6 +142,7 @@ public class DeclarationResolver implements IVisitor<Void> {
         functionDeclaration.statements.accept(this);
         table.define(functionDeclaration.name, new FunctionType(scopes.firstElement()));
         leaveScope();
+
         return null;
 
     }
@@ -176,7 +182,6 @@ public class DeclarationResolver implements IVisitor<Void> {
         if (returnStatement.returnExpression != null) {
             returnStatement.returnExpression.accept(this);
         }
-
         return null;
     }
 

@@ -48,9 +48,25 @@ var x:int=12;
 // fun hello():int{
 
 // }
+fun add(a:int,b:int):int{
+	return a+b;
+}
 fun main():bool{
-	if(x==12){
-		// do some more calculation.
-	}	
-	return;
+	add(123,1234); // should throw an error.
+	var x:int=123;
+	if(x==2){
+		return true;
+	}else if(1==1){
+		return false;
+	}else{
+		
+		if(123<123){
+			return true;
+		}else if(13>12){
+			return false;
+		}
+		return false;
+	}
+	
+	return false;
 }

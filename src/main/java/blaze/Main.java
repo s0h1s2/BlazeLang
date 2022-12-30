@@ -17,6 +17,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 
 import blaze.ast.Program;
+import blaze.types.IntType;
 
 public class Main {
     public static void main(String[] args) throws IOException {
@@ -31,6 +32,7 @@ public class Main {
         binder.visit(ast);
         TypeChecker checker=new TypeChecker(table);
         checker.visit(ast);
+
     }
 
 }

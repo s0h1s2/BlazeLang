@@ -12,11 +12,14 @@
 
 package blaze;
 
+import java.time.chrono.ThaiBuddhistChronology;
+
 import blaze.ast.Assignment;
 import blaze.ast.BinaryOp;
 import blaze.ast.BlockStatement;
 import blaze.ast.Bool;
 import blaze.ast.CallExpr;
+import blaze.ast.Expression;
 import blaze.ast.FunctionDeclaration;
 import blaze.ast.IfStatement;
 import blaze.ast.Int;
@@ -31,19 +34,32 @@ import blaze.ast.VarDeclaration;
 import blaze.ast.VariableExpression;
 import blaze.ast.WhileStatement;
 import blaze.types.BoolType;
+import blaze.types.FunctionType;
 import blaze.types.IntType;
 import blaze.types.Type;
 
 public class TypeChecker implements IVisitor<Type> {
     private SymbolTable table;
+    private SymbolTable prev;
+    private SymbolTable global;
+    private Type funcitonReturnType;
     public TypeChecker(SymbolTable table){
+        this.global=table;
         this.table=table;
+        this.prev=table;
     }
     @Override
     public Type visit(IfStatement ifStatement) {
         Type conditionType=(Type)ifStatement.condition.accept(this);
         if(conditionType instanceof BoolType){
-            // goto block declaration
+            ifStatement.then.accept(this);
+            if(ifStatement.elseIfs!=null){
+                ifStatement.elseIfs.forEach((stmt)->stmt.accept(this));
+            }
+            if(ifStatement.els!=null){
+                ifStatement.els.accept(this);
+            }
+            
             return conditionType;
         }
         throw new Error("If statement must have boolean condition.");
@@ -51,7 +67,15 @@ public class TypeChecker implements IVisitor<Type> {
 
     @Override
     public Type visit(CallExpr callExpr) {
-        
+        for(Expression arg:callExpr.args){
+            Type argType=(Type)arg.accept(this);
+            FunctionType callee=(FunctionType)global.getDecl(callExpr.name);
+            for(String argName :callee.getTable().getKeys()){
+                if(!callee.getTable().getDecl(argName).equals(argType)){
+                    throw new Error("Argument must be same as parameter type.");
+                }
+            }
+        }
         return null;
     }
 
@@ -97,8 +121,7 @@ public class TypeChecker implements IVisitor<Type> {
                 throw new Error("Left and Right must be same type.");
             }
             default:
-                break;
-            
+                throw new UnsupportedOperationException(null, null);
         }
         return null;
     }
@@ -110,7 +133,6 @@ public class TypeChecker implements IVisitor<Type> {
 
     @Override
     public Type visit(Ternary ternary) {
-        
         return null;
     }
 
@@ -127,11 +149,15 @@ public class TypeChecker implements IVisitor<Type> {
 
     @Override
     public Type visit(FunctionDeclaration functionDeclaration) {
-        functionDeclaration.statements.accept(this);
-        
+        FunctionType functionTable=(FunctionType)table.getDecl(functionDeclaration.name);
+        this.prev=this.table;
+        this.table=functionTable.getTable();
+        funcitonReturnType=functionDeclaration.returnType;
+        functionDeclaration.statements.accept(this);    
+        funcitonReturnType=null;
+        this.table=this.prev;
         return null;
     }
-
     @Override
     public Type visit(Parameter parameter) {
         
@@ -169,7 +195,12 @@ public class TypeChecker implements IVisitor<Type> {
 
     @Override
     public Type visit(ReturnStatement returnStatement) {
-        
+        if(returnStatement.returnExpression!=null){
+            Type result=(Type)returnStatement.returnExpression.accept(this);
+            if(!funcitonReturnType.equals(result)){
+                throw new Error("Return must be same type as function.");
+            }
+        }
         return null;
     }
 
