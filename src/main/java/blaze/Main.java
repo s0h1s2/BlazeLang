@@ -31,8 +31,6 @@ public class Main {
         binder.visit(ast);
         // TypeChecker checker=new TypeChecker(table);
         // checker.visit(ast);
-        int j=0;
-
     }
 
 }
