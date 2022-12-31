@@ -11,14 +11,12 @@
  */
 
 package blaze;
-
-import java.time.chrono.ThaiBuddhistChronology;
-
 import blaze.ast.Assignment;
 import blaze.ast.BinaryOp;
 import blaze.ast.BlockStatement;
 import blaze.ast.Bool;
 import blaze.ast.CallExpr;
+import blaze.ast.CharLit;
 import blaze.ast.Expression;
 import blaze.ast.FunctionDeclaration;
 import blaze.ast.IfStatement;
@@ -34,6 +32,7 @@ import blaze.ast.VarDeclaration;
 import blaze.ast.VariableExpression;
 import blaze.ast.WhileStatement;
 import blaze.types.BoolType;
+import blaze.types.CharType;
 import blaze.types.FunctionType;
 import blaze.types.IntType;
 import blaze.types.Type;
@@ -67,13 +66,17 @@ public class TypeChecker implements IVisitor<Type> {
 
     @Override
     public Type visit(CallExpr callExpr) {
-        for(Expression arg:callExpr.args){
-            Type argType=(Type)arg.accept(this);
-            FunctionType callee=(FunctionType)global.getDecl(callExpr.name);
-            for(String argName :callee.getTable().getKeys()){
-                if(!callee.getTable().getDecl(argName).equals(argType)){
-                    throw new Error("Argument must be same as parameter type.");
-                }
+        FunctionType callee=(FunctionType)global.getDecl(callExpr.name);
+        // TODO: handle this in declaration resolver.
+        if(callee.getTable().getKeys().size()!=callExpr.args.size()){
+            throw new Error("Argument number must be same with function declaration.");
+        }
+        
+        for (int i = 0; i < callExpr.args.size(); i++) {
+            Type argType=(Type)callExpr.args.get(i).accept(this);
+            String parameterName=(String)callee.getTable().getKeys().toArray()[i];
+            if(!callee.getTable().getDecl(parameterName).equals(argType)){
+                throw new Error("Argument must be same type as function.");
             }
         }
         return null;
@@ -143,7 +146,22 @@ public class TypeChecker implements IVisitor<Type> {
 
     @Override
     public Type visit(Unary unary) {
-        
+        Type right=(Type)unary.right.accept(this);
+        switch(unary.op){
+            case OPERATOR_DEREFERENCE:
+                break;
+            case OPERATOR_GETADDRESS:
+                break;
+            case OPERATOR_NEGATIVE:
+            case OPERATOR_POSITIVE:
+                if(right instanceof IntType){
+                    return right;
+                }
+                throw new Error("-/+ right hand must be int.");
+            default:
+                break;
+
+        }
         return null;
     }
 
@@ -223,5 +241,9 @@ public class TypeChecker implements IVisitor<Type> {
     public Type visit(Modify modify) {
         
         return null;
+    }
+    @Override
+    public Type visit(CharLit charLit) {
+        return new CharType();
     }
 }

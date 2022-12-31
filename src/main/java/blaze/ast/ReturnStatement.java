@@ -13,7 +13,6 @@
 package blaze.ast;
 
 import blaze.IVisitor;
-import blaze.types.Type;
 
 public class ReturnStatement extends Stmt {
     public Expression returnExpression;

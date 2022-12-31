@@ -77,11 +77,14 @@ public class Lexer {
         advance();
         return new Token(kind);
     }
-
+    private Token makeSingleToken(TokenKind kind,Object val) {
+        advance();
+        return new Token(kind,val);
+    }
     private Token makeDoubleToken(TokenKind kind, char next, TokenKind nextKind) {
         advance();
         if (match(next)) {
-            return new Token(nextKind);
+           return new Token(nextKind);
         }
         return new Token(kind);
     }
@@ -122,7 +125,7 @@ public class Lexer {
                         result += chr() - '0';
                         advance();
                     }
-                    return new Token(TokenKind.TOKEN_INTEGER, result);
+                    return new Token(TokenKind.TOKEN_INTEGER_LITERAL,result);
                 }
                 case 'a':
                 case 'b':
@@ -183,9 +186,10 @@ public class Lexer {
                         advance();
                     }
                     if (keywords.get(name) != null) {
-                        return new Token(keywords.get(name), name);
+                        return new Token(keywords.get(name),name);
+
                     }
-                    return new Token(TokenKind.TOKEN_IDENTIFIER, name);
+                    return new Token(TokenKind.TOKEN_IDENTIFIER,name);
                 }
                 case '(':
                     return makeSingleToken(TokenKind.TOKEN_LPARAN);
@@ -198,28 +202,35 @@ public class Lexer {
                 case '=': {
                     return makeDoubleToken(TokenKind.TOKEN_ASSIGN, '=', TokenKind.TOKEN_EQUAL);
                 }
-
+                case '\'':{
+                    advance();
+                    char c=chr();
+                    advance();
+                    if(chr()=='\''){
+                        return makeSingleToken(TokenKind.TOKEN_CHAR_LITERAL,c);
+                    }
+                    throw new Error("char literal must be closed.");
+                }
                 case '!': {
                     return makeDoubleToken(TokenKind.TOKEN_BANG, '!', TokenKind.TOKEN_NOTEQUAL);
                 }
                 case '<': {
                     advance();
                     if (match('=')) {
-                        return new Token(TokenKind.TOKEN_LEQ, "<=");
+                        return makeSingleToken(TokenKind.TOKEN_LEQ);
                     } else if (match('<')) {
-                        return new Token(TokenKind.TOKEN_LEFTSHIFT, "<<");
+                        return makeSingleToken(TokenKind.TOKEN_LEFTSHIFT);
                     }
-                    return new Token(TokenKind.TOKEN_LE, "<");
-
+                    return makeSingleToken(TokenKind.TOKEN_LE);
                 }
                 case '>': {
                     advance();
                     if (match('=')) {
-                        return new Token(TokenKind.TOKEN_GEQ, ">=");
+                        return makeSingleToken(TokenKind.TOKEN_GEQ);
                     } else if (match('>')) {
-                        return new Token(TokenKind.TOKEN_RIGHTSHIFT, ">>");
+                        return makeSingleToken(TokenKind.TOKEN_RIGHTSHIFT);
                     }
-                    return new Token(TokenKind.TOKEN_GE, ">");
+                    return makeSingleToken(TokenKind.TOKEN_GE);
                 }
                 case '+': {
                     return makeDoubleToken(TokenKind.TOKEN_PLUS, '+', TokenKind.TOKEN_INCREMENT);
@@ -238,7 +249,7 @@ public class Lexer {
                         }
                         continue;
                     } else {
-                        return new Token(TokenKind.TOKEN_SLASH, "/");
+                        return makeSingleToken(TokenKind.TOKEN_SLASH);
                     }
 
                 }
@@ -275,7 +286,7 @@ public class Lexer {
             }
         }
 
-        return new Token(TokenKind.TOKEN_EOF, "EOF");
+        return makeSingleToken(TokenKind.TOKEN_EOF);
     }
 
 }

@@ -124,7 +124,7 @@ public class DeclarationResolver implements IVisitor<Void> {
 
     @Override
     public Void visit(Unary unary) {
-        unary.accept(this);
+        unary.right.accept(this);
         return null;
     }
 
@@ -203,6 +203,11 @@ public class DeclarationResolver implements IVisitor<Void> {
     @Override
     public Void visit(Modify modify) {
         modify.left.accept(this);
+        return null;
+    }
+
+    @Override
+    public Void visit(CharLit charLit) {
         return null;
     }
 

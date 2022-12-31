@@ -48,14 +48,12 @@ public class SymbolTable {
         }
         return false;
     }
-
     public boolean containDecl(String name) {
         if (decls!=null && decls.containsKey(name) ) {
             return true;
         }
         return false;
     }
-
     public Type getDecl(String name) {
         if (containDecl(name)) {
             return decls.get(name);

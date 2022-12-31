@@ -48,4 +48,6 @@ public interface IVisitor<T> {
     public T visit(Program program);
 
     public T visit(Modify modify);
+
+    public T visit(CharLit charLit);
 }

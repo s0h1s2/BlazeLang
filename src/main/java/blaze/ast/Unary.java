@@ -16,9 +16,8 @@ import blaze.IVisitor;
 import blaze.util.AstOperators.AstUnaryOperator;
 
 public class Unary extends Expression {
-    AstUnaryOperator op;
-    Expression right;
-
+    public AstUnaryOperator op;
+    public Expression right;
     public Unary(AstUnaryOperator op, Expression right) {
         super();
         this.op = op;

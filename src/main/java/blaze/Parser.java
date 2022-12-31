@@ -345,9 +345,11 @@ public class Parser {
     }
 
     private Expression primary() {
-        if (match(TokenKind.TOKEN_INTEGER)) {
+        if (match(TokenKind.TOKEN_INTEGER_LITERAL)) {
             return new Int((int) prev.getValue());
-        } else if (match(TokenKind.TOKEN_TRUE)) {
+        } else if(match(TokenKind.TOKEN_CHAR_LITERAL)){
+            return new CharLit((char)prev.getValue());
+        }else if (match(TokenKind.TOKEN_TRUE)) {
             return new Bool(true);
         } else if (match(TokenKind.TOKEN_FALSE)) {
             return new Bool(false);

@@ -17,7 +17,6 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 
 import blaze.ast.Program;
-import blaze.types.IntType;
 
 public class Main {
     public static void main(String[] args) throws IOException {
