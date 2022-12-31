@@ -60,7 +60,8 @@ fun main():bool{
 	var g:int=112;
 	var z:bool=false;
 	var y:int=112;
-	var x:int=123;
+	var a:int=12;
+	var d[10]:int;
 	add(123,1234);
 	add(y,1);
 	testArguments(123,true,'a',14);
@@ -76,6 +77,8 @@ fun main():bool{
 		}
 		return false;
 	}
-	
 	return false;
 }
+// fun belowTest():int{
+// 	return 123;
+// }

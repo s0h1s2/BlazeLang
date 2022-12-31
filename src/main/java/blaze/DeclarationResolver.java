@@ -211,4 +211,10 @@ public class DeclarationResolver implements IVisitor<Void> {
         return null;
     }
 
+    @Override
+    public Object visit(ArrayDeclaration arrayDeclaration) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
 }

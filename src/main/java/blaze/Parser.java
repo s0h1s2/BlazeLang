@@ -188,10 +188,12 @@ public class Parser {
         }
         throw new Error("Unimplemented type");
     }
-
     private Declaration parseVarDeclaration() {
         expect(TokenKind.TOKEN_IDENTIFIER, "Expect identifier");
         String name = prev.getValue().toString();
+        if(match(TokenKind.TOKEN_LBRACKET)){
+            return parseArrayDeclaration(name);
+        }
         expect(TokenKind.TOKEN_COLON, "Expect ':'");
         Type type = parseType();
         Expression initExpr = null;
@@ -200,6 +202,15 @@ public class Parser {
         }
         expect(TokenKind.TOKEN_SEMICOLON, "Expected ';' after statement");
         return new VarDeclaration(name, initExpr, type);
+    }
+
+    private Declaration parseArrayDeclaration(String name) {
+        Expression size=expression();
+        expect(TokenKind.TOKEN_RBRACKET, "Expected ']'");
+        expect(TokenKind.TOKEN_COLON, "Expected ':'");
+        Type type=parseType();
+        expect(TokenKind.TOKEN_SEMICOLON, "Expected ';'");
+        return new ArrayDeclaration(name, size, type, null);
     }
 
     private Expression expression() {

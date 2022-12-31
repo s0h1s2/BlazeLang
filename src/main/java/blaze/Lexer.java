@@ -241,6 +241,13 @@ public class Lexer {
                 case '*': {
                     return makeSingleToken(TokenKind.TOKEN_STAR);
                 }
+                case '[':{
+                    return makeSingleToken(TokenKind.TOKEN_LBRACKET);
+                }
+                case ']':{
+                    return makeSingleToken(TokenKind.TOKEN_RBRACKET);
+                }
+                
                 case '/': {
                     advance();
                     if (match('/')) {

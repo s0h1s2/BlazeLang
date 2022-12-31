@@ -11,6 +11,7 @@
  */
 
 package blaze;
+import blaze.ast.ArrayDeclaration;
 import blaze.ast.Assignment;
 import blaze.ast.BinaryOp;
 import blaze.ast.BlockStatement;
@@ -245,5 +246,10 @@ public class TypeChecker implements IVisitor<Type> {
     @Override
     public Type visit(CharLit charLit) {
         return new CharType();
+    }
+    @Override
+    public Object visit(ArrayDeclaration arrayDeclaration) {
+        // TODO Auto-generated method stub
+        return null;
     }
 }

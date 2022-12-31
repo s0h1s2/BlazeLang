@@ -50,4 +50,6 @@ public interface IVisitor<T> {
     public T visit(Modify modify);
 
     public T visit(CharLit charLit);
+
+    public Object visit(ArrayDeclaration arrayDeclaration);
 }
