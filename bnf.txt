@@ -1,3 +1,26 @@
+customType: IDENTIFIER
+
+type:
+    'int'| 'bool' | 'char' | customType
+varDeclaration:
+    'var' IDENTIFIER ':' type ('=' expression?)
+funDeclaration:
+    'fun' IDENTIFIER '(' field ',' (field*) ')' ':' type '{'  blockStatement '}'
+structDeclaration:
+    'struct' IDENTIFIER '{' field ';' (field*)  '}'
+field:
+    IDENTIFIER ':' type
+
+Declaration:
+    varDeclaration |  funDeclaration | structDeclaration
+
+// Statements
+blockStatement: '{' ifStatement | whileStatement | varDeclaration | returnStatement | expressionStatement '}'
+ifStatement: 'if' '(' expression ')' blockStatement
+whileStatement: 'while' '(' expression ')' blockStatement
+returnStatement: 'return' (expression?) ';'
+expressionStatement:expression ';'
+
 argList:expression ',' (expression*)
 expression: assignment
 assignment: ternary '=' ternary
@@ -11,11 +34,12 @@ equality: relational ('!='|'==') relational
 relational: addition ('<' | '>' | '<=' | '>=') addition
 addition: multiplication ('+' | '-') multiplication
 multiplication: call ('*' | '/') call
-call: unary | identifier '(' argList ')' 
+call: unary | IDENTIFIER '(' argList ')' 
 unary: ('-' | '+' | '!' | '&' | '*') unary | primary
 postfix: primary | primary ('++' | '--')
-primary: INT | CHAR | BOOLEAN | IDENTIFIER | '(' expression ')'
+primary: INT | CHAR | BOOLEAN | IDENTIFIER | NULL | '(' expression ')'
 INT:[0-9]*
 CHAR: ascii table
 BOOLEAN: 'true' | 'false'
+NULL: 'null'
 IDENTIFIER:[A-Za-z_]?[A-Za-z_0-9]*
