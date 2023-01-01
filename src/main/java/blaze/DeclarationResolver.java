@@ -217,4 +217,10 @@ public class DeclarationResolver implements IVisitor<Void> {
         return null;
     }
 
+    @Override
+    public Object visit(Struct struct) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
 }

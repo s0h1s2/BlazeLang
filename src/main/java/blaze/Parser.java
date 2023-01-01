@@ -39,7 +39,9 @@ public class Parser {
     private Token peek() {
         return this.token;
     }
-
+    private boolean isAtEnd(){
+        return this.token.getKind()==TokenKind.TOKEN_EOF;
+    }
     private boolean match(TokenKind kind) {
         if (token.getKind() == kind) {
             advance();
@@ -61,6 +63,8 @@ public class Parser {
                 decls.add(parseVarDeclaration());
             } else if (match(TokenKind.TOKEN_FUN)) {
                 decls.add(parseFunctionDeclaration());
+            } else if(match(TokenKind.TOKEN_STRUCT)){
+                decls.add(parseStructDeclaration());
             } else {
                 throw new Error("Unexpected declaration.");
             }
@@ -132,7 +136,7 @@ public class Parser {
         }
         return new IfStatement(condition, then, elseIfs,els);
     }
-
+    
     private BlockStatement parseBlockStatement() {
         List<Stmt> statements = new ArrayList<>();
         expect(TokenKind.TOKEN_LBRACE, "Expected '{'");
@@ -151,7 +155,18 @@ public class Parser {
         Type type = parseType();
         return new Parameter(name, type);
     }
-
+    private Struct parseStructDeclaration() {
+        expect(TokenKind.TOKEN_IDENTIFIER, "Expected identiifer.");
+        String name = prev.getValue().toString();
+        expect(TokenKind.TOKEN_LBRACE, "Expected '{'");
+        List<Parameter> fields = new ArrayList<Parameter>();
+        while(peek().getKind()!=TokenKind.TOKEN_RBRACE && !isAtEnd()){
+            fields.add(parseFunctionParameter());
+            expect(TokenKind.TOKEN_SEMICOLON, "Expected ';' after struct field.");
+        }
+        expect(TokenKind.TOKEN_RBRACE, "Expected '}'");
+        return new Struct(name, fields);
+    }
     private List<Parameter> parseFunctionParameters() {
         List<Parameter> parameters = new ArrayList<Parameter>();
         parameters.add(parseFunctionParameter());
@@ -160,7 +175,6 @@ public class Parser {
         }
         return parameters;
     }
-
     private Declaration parseFunctionDeclaration() {
         BlockStatement body = null;
         Type returnType = null;

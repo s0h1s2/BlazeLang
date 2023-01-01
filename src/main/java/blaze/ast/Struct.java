@@ -12,5 +12,26 @@
 
 package blaze.ast;
 
-public class Struct {
+import java.util.List;
+
+import blaze.IVisitor;
+import blaze.types.Type;
+
+public class Struct extends Declaration {
+    public String name;
+    public List<Parameter> fields;
+
+    public Struct(String name, List<Parameter> fields) {
+        this.name = name;
+        this.fields = fields;
+    }
+    @Override
+    public Object accept(IVisitor<?> visitor) {
+        return visitor.visit(this);
+    }
+
+    @Override
+    public Type getType() {
+        return null;
+    }
 }

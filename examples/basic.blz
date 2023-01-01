@@ -1,10 +1,8 @@
 var x:int=12;
-
-// struct Person{
-// 	name:char;
-// 	age:int;
-
-// }
+struct Person{
+	name:char;
+	age:int;
+}
 // fun createPerson():Person{
 // 	var person:Person;
 // 	person.name='a';

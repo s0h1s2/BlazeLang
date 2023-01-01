@@ -27,6 +27,7 @@ import blaze.ast.Parameter;
 import blaze.ast.Program;
 import blaze.ast.ReturnStatement;
 import blaze.ast.Stmt;
+import blaze.ast.Struct;
 import blaze.ast.Ternary;
 import blaze.ast.Unary;
 import blaze.ast.VarDeclaration;
@@ -249,6 +250,11 @@ public class TypeChecker implements IVisitor<Type> {
     }
     @Override
     public Object visit(ArrayDeclaration arrayDeclaration) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+    @Override
+    public Object visit(Struct struct) {
         // TODO Auto-generated method stub
         return null;
     }

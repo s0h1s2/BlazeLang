@@ -52,4 +52,6 @@ public interface IVisitor<T> {
     public T visit(CharLit charLit);
 
     public Object visit(ArrayDeclaration arrayDeclaration);
+
+    public Object visit(Struct struct);
 }
