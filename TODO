@@ -1,3 +1,4 @@
 [x] Implement ascii char literal in lexer/parser.
+[] think of how to represent arrays syntactically.
 [] Implement single line string literal in lexer/parser.
 [] Design a better symbol table.

@@ -1,0 +1,21 @@
+argList:expression ',' (expression*)
+expression: assignment
+assignment: ternary '=' ternary
+ternary: logicalOr '?' ternary ':' ternary
+logicalOr: logicalAnd '||' logicalAnd
+logicalAnd: bitOr '&&' bitOr
+bitOr:  bitXor '|' bitXor
+bitXor:  bitAnd '^' bitAnd
+bitAnd:  equality '&' equality
+equality: relational ('!='|'==') relational
+relational: addition ('<' | '>' | '<=' | '>=') addition
+addition: multiplication ('+' | '-') multiplication
+multiplication: call ('*' | '/') call
+call: unary | identifier '(' argList ')' 
+unary: ('-' | '+' | '!' | '&' | '*') unary | primary
+postfix: primary | primary ('++' | '--')
+primary: INT | CHAR | BOOLEAN | IDENTIFIER | '(' expression ')'
+INT:[0-9]*
+CHAR: ascii table
+BOOLEAN: 'true' | 'false'
+IDENTIFIER:[A-Za-z_]?[A-Za-z_0-9]*

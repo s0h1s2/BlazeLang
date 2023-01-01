@@ -199,8 +199,12 @@ public class Parser {
             return new CharType();
         } else if (match(TokenKind.TOKEN_BOOL)) {
             return new BoolType();
+        }else{
+            CustomType type=new CustomType(token.getValue().toString());
+            expect(TokenKind.TOKEN_IDENTIFIER, "Type must be identifier.");
+            return type;
         }
-        throw new Error("Unimplemented type");
+        
     }
     private Declaration parseVarDeclaration() {
         expect(TokenKind.TOKEN_IDENTIFIER, "Expect identifier");
