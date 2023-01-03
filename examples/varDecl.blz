@@ -1,0 +1,10 @@
+var a:int=5;
+var b:char='a';
+var helloDarkness:int=256;
+
+fun test():bool{
+	return false;
+}
+fun main():int{
+	1+4*5;
+}

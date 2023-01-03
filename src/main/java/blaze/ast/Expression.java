@@ -13,5 +13,12 @@
 package blaze.ast;
 
 public abstract class Expression extends Stmt {
-
-}
+    private String register=null;
+    
+    public void setReg(String name){
+        this.register=name;
+    }
+    public String getReg(){
+        return this.register;
+    }
+}   

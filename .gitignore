@@ -3,3 +3,4 @@ blaze.iml
 .idea/
 .vscode/
 target/
+asmOutput/

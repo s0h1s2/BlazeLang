@@ -7,7 +7,7 @@ public class CharLit extends Expression {
     public CharLit(char c){
         this.c=c;
     }
-    public Object getValue(){
+    public char getValue(){
         return c;
     }
     @Override
