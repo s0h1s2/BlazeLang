@@ -80,6 +80,9 @@ public class Intel86 implements IVisitor<Object> {
             System.err.println("write to file failed.");
         }
     }
+    private void emitIns(String ins){
+        emitLn("    "+ins);
+    }
     private void emit(String line){
         try{
             writer.write(line);
@@ -101,7 +104,7 @@ public class Intel86 implements IVisitor<Object> {
     @Override
     public Object visit(Int integer) {
         String reg=getRegister();
-        emitLn("    mov "+reg+","+integer.getValue());
+        emitIns("mov "+reg+","+integer.getValue());
         integer.setReg(reg);
         return integer;
     }
@@ -111,9 +114,7 @@ public class Intel86 implements IVisitor<Object> {
         Expression right=(Expression)binOp.right.accept(this);
         switch(binOp.op){
             case OPERATOR_ADD:
-                emitLn("    add "+left.getReg()+","+right.getReg());
-                freeRegister(right.getReg());
-                return left;
+                emitIns("add "+left.getReg()+","+right.getReg());
             case OPERATOR_AND:
                 break;
             case OPERATOR_BITAND:
@@ -123,23 +124,17 @@ public class Intel86 implements IVisitor<Object> {
             case OPERATOR_BITWISE:
                 break;
             case OPERATOR_DIVIDE:
-                break;
+            break;
             case OPERATOR_EQUAL:
-                emitLn("cmp rax,rcx");
-                break;
+            case OPERATOR_NOEQUAL:
             case OPERATOR_GE:
-                break;
-            case OPERATOR_GEQ:
-                break;
             case OPERATOR_LE:
-                break;
+            case OPERATOR_GEQ:
             case OPERATOR_LEQ:
+                emitIns("cmp "+left.getReg()+","+right.getReg());
                 break;
             case OPERATOR_MULTIPLY:
-                emitLn("imul "+left.getReg()+","+right.getReg());
-                freeRegister(left.getReg());
-                return right;
-            case OPERATOR_NOEQUAL:
+                emitIns("imul "+left.getReg()+","+right.getReg());
                 break;
             case OPERATOR_OR:
                 break;
@@ -148,8 +143,8 @@ public class Intel86 implements IVisitor<Object> {
             default:
                 break;
         }
-
-        return null;
+        freeRegister(right.getReg());
+        return left;
     }
     @Override
     public Object visit(Bool bool) {

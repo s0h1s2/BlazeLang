@@ -44,6 +44,17 @@ public class TypeChecker implements IVisitor<Type> {
     private SymbolTable prev;
     private SymbolTable global;
     private Type funcitonReturnType;
+    private long blockCounter=0;
+    private boolean isFinalReturnReached=false;
+    
+    /*
+        fn{
+            if(){
+
+            }
+            return 1;
+        }
+     */
     public TypeChecker(SymbolTable table){
         this.global=table;
         this.table=table;
@@ -172,9 +183,14 @@ public class TypeChecker implements IVisitor<Type> {
         FunctionType functionTable=(FunctionType)table.getDecl(functionDeclaration.name);
         this.prev=this.table;
         this.table=functionTable.getTable();
+        
         funcitonReturnType=functionDeclaration.returnType;
-        functionDeclaration.statements.accept(this);    
+        functionDeclaration.statements.accept(this);
+        if(!isFinalReturnReached){
+            throw new Error("Function must return expression.");
+        }
         funcitonReturnType=null;
+        isFinalReturnReached=false;
         this.table=this.prev;
         return null;
     }
@@ -201,32 +217,37 @@ public class TypeChecker implements IVisitor<Type> {
 
     @Override
     public Type visit(WhileStatement whileStatement) {
-        
         return null;
     }
 
     @Override
     public Type visit(BlockStatement block) {
+        blockCounter++;
         for (Stmt stmt : block.stmts) {
             stmt.accept(this);
         }
+        blockCounter--;
         return null;
     }
 
     @Override
     public Type visit(ReturnStatement returnStatement) {
+        if(blockCounter==1){
+            isFinalReturnReached=true;   
+        }
         if(returnStatement.returnExpression!=null){
             Type result=(Type)returnStatement.returnExpression.accept(this);
             if(!funcitonReturnType.equals(result)){
                 throw new Error("Return must be same type as function.");
             }
+        }else{
+            throw new Error("Funciton must return expression.");
         }
         return null;
     }
 
     @Override
     public Type visit(Assignment assignment) {
-        
         return null;
     }
 
