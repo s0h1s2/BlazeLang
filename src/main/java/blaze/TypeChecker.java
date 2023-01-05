@@ -46,15 +46,7 @@ public class TypeChecker implements IVisitor<Type> {
     private Type funcitonReturnType;
     private long blockCounter=0;
     private boolean isFinalReturnReached=false;
-    
-    /*
-        fn{
-            if(){
 
-            }
-            return 1;
-        }
-     */
     public TypeChecker(SymbolTable table){
         this.global=table;
         this.table=table;

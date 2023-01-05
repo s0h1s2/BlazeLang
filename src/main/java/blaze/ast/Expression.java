@@ -21,4 +21,6 @@ public abstract class Expression extends Stmt {
     public String getReg(){
         return this.register;
     }
+    public abstract Object getValue();
+    
 }   

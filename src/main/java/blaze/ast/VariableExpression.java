@@ -20,9 +20,12 @@ public class VariableExpression extends Expression {
     public VariableExpression(String name) {
         this.name = name;
     }
-
+    public Object getValue(){
+        return this.name;
+    }    
     @Override
     public Object accept(IVisitor<?> visitor) {
         return visitor.visit(this);
     }
+
 }

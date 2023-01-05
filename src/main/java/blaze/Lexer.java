@@ -55,7 +55,18 @@ public class Lexer {
         }
 
     }
-
+    private boolean matchNext(char c) {
+        if(isAtEnd()){
+            return false;
+        }
+        advance();
+        if(match(c)){
+            return true;
+        }
+        current--;
+        return false;
+        
+    }
     private void initKeywords() {
         this.keywords.put("if", TokenKind.TOKEN_IF);
         this.keywords.put("else", TokenKind.TOKEN_ELSE);
@@ -249,16 +260,13 @@ public class Lexer {
                 }
                 
                 case '/': {
-                    advance();
-                    if (match('/')) {
+                    if (matchNext('/')) {
                         while (!isAtEnd() && !match('\n')) {
                             advance();
                         }
                         continue;
-                    } else {
-                        return makeSingleToken(TokenKind.TOKEN_SLASH);
-                    }
-
+                    } 
+                    return makeSingleToken(TokenKind.TOKEN_SLASH);
                 }
                 case '&': {
                     return makeDoubleToken(TokenKind.TOKEN_BITAND, '&', TokenKind.TOKEN_AND);
@@ -295,5 +303,5 @@ public class Lexer {
 
         return makeSingleToken(TokenKind.TOKEN_EOF);
     }
-
+    
 }

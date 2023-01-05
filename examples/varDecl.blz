@@ -2,19 +2,16 @@ var a:int=5;
 var b:char='a';
 var helloDarkness:int=256;
 
-fun test():bool{
-	return false;
-}
+// fun test():bool{
+	// return false;
+//}
+
 fun main():int{
-	if(1==1){
-		{
-			return 1;
-		}
-		{
-			return 2;
-		}{
-			return 3;
-		}
-	}
-	return 123;
+	// mov rax,12;
+	// mov rcx,3
+	// add rax,rcx
+	1+2+3;
+	//return ;
+	return 1;
 }
+

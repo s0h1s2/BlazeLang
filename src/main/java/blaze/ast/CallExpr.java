@@ -30,4 +30,10 @@ public class CallExpr extends Expression {
         return visitor.visit(this);
     }
 
+    @Override
+    public Object getValue() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
 }

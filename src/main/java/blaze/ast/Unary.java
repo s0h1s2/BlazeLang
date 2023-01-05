@@ -28,4 +28,10 @@ public class Unary extends Expression {
     public Object accept(IVisitor<?> visitor) {
         return visitor.visit(this);
     }
+
+    @Override
+    public Object getValue() {
+        // TODO Auto-generated method stub
+        return null;
+    }
 }

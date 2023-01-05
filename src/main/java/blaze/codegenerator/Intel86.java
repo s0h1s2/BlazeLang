@@ -1,3 +1,14 @@
+/*
+ ** Jan 2,2022 Shkar Sardar
+ **
+ ** The author disclaims copyright to this source code.  In place of
+ ** a legal notice, here is a blessing:
+ **
+ **    May you do good and not evil.
+ **    May you find forgiveness for yourself and forgive others.
+ **    May you share freely, never taking more than you give.
+ **
+ */
 package blaze.codegenerator;
 
 import java.io.File;
@@ -36,21 +47,14 @@ import blaze.types.Type;
 
 public class Intel86 implements IVisitor<Object> {
     private FileWriter writer;
-    private HashMap<String,Boolean> registers;
-    
+    private HashMap<String,Boolean> registersInUse;
+    private String[] registers;
+
     public Intel86(File file){
         try {
             this.writer=new FileWriter(file);
-            this.registers=new HashMap<>();
-            this.registers.put("rax", false);
-            this.registers.put("rcx", false);
-            this.registers.put("rbx", false);
-            this.registers.put("r10", false);
-            this.registers.put("r11", false);
-            this.registers.put("r12", false);
-            this.registers.put("r13", false);
-            this.registers.put("r14", false);
-            this.registers.put("r15", false);
+            this.registersInUse=new HashMap<>();
+            registers=new String[]{"rax","rcx","r10","r11","r12","r13","r14"};
             
         } catch (IOException e) {
             System.err.println("File reading failed.");
@@ -59,17 +63,26 @@ public class Intel86 implements IVisitor<Object> {
         
     }
     private String getRegister(){
-        for (String key : registers.keySet()) {
-            if(registers.get(key)==false){
-                registers.put(key, true);
-                return key;
+        for (String register : registers) {
+            if(registersInUse.get(register)==null){
+                registersInUse.put(register,true);
+                return register;
+            }
+            if(registersInUse.get(register)==false){
+                registersInUse.put(register, true);
+                return register;
             }
         }
+
         throw new Error("No Register found.");
 
     }
+    private void setRegister(String reg){
+        registersInUse.put(reg, true);
+    }
+    
     private void freeRegister(String key){
-        registers.put(key, false);
+        registersInUse.put(key, false);
     }
     
     private void emitLn(String line){
@@ -98,53 +111,64 @@ public class Intel86 implements IVisitor<Object> {
     }
     @Override
     public Object visit(CallExpr callExpr) {
-        // TODO Auto-generated method stub
         return null;
     }
     @Override
     public Object visit(Int integer) {
-        String reg=getRegister();
-        emitIns("mov "+reg+","+integer.getValue());
-        integer.setReg(reg);
-        return integer;
+        return integer.getValue();
     }
     @Override
     public Object visit(BinaryOp binOp) {
-        Expression left=(Expression)binOp.left.accept(this);
-        Expression right=(Expression)binOp.right.accept(this);
         switch(binOp.op){
             case OPERATOR_ADD:
-                emitIns("add "+left.getReg()+","+right.getReg());
+                Object l=binOp.left.accept(this);
+                Object r=binOp.right.accept(this);
+                String reg1=getRegister();
+                String reg2=getRegister();
+                emitIns("mov "+reg1+","+l);
+                emitIns("mov "+reg2+","+r);        
+                emitIns("add "+reg1+","+reg2);
+                freeRegister(reg2);
+                return reg1;
+            case OPERATOR_DIVIDE:
+                //emitIns("idiv "+left.getReg()+","+right.getReg());
+                break;
+            case OPERATOR_MULTIPLY:
+                //emitIns("imul "+left.getReg()+","+right.getReg());
+                break;
+            case OPERATOR_SUBTRACT:
+                break;
             case OPERATOR_AND:
+                // jump to the label if not equal
                 break;
             case OPERATOR_BITAND:
+                //emitIns("and "+left.getReg()+","+right.getReg());
                 break;
             case OPERATOR_BITOR:
+              //  emitIns("or "+left.getReg()+","+right.getReg());
                 break;
             case OPERATOR_BITWISE:
+                //emitIns("xor "+left.getReg()+","+right.getReg());
                 break;
-            case OPERATOR_DIVIDE:
-            break;
+            
             case OPERATOR_EQUAL:
             case OPERATOR_NOEQUAL:
             case OPERATOR_GE:
             case OPERATOR_LE:
             case OPERATOR_GEQ:
             case OPERATOR_LEQ:
-                emitIns("cmp "+left.getReg()+","+right.getReg());
+                //emitIns("cmp "+left.getReg()+","+right.getReg());
                 break;
-            case OPERATOR_MULTIPLY:
-                emitIns("imul "+left.getReg()+","+right.getReg());
-                break;
+            
             case OPERATOR_OR:
-                break;
-            case OPERATOR_SUBTRACT:
+
                 break;
             default:
                 break;
         }
-        freeRegister(right.getReg());
-        return left;
+        //freeRegister(right.getReg());
+        //return left;
+        return null;
     }
     @Override
     public Object visit(Bool bool) {
@@ -163,7 +187,19 @@ public class Intel86 implements IVisitor<Object> {
     }
     @Override
     public Object visit(Unary unary) {
-        // TODO Auto-generated method stub
+        switch (unary.op) {
+            case OPERATOR_DEREFERENCE:
+                break;
+            case OPERATOR_GETADDRESS:
+                break;
+            case OPERATOR_NEGATIVE:
+                //emitIns();
+            case OPERATOR_POSITIVE:
+                break;
+            default:
+                break;
+
+        }
         return null;
     }
     @Override
@@ -172,7 +208,6 @@ public class Intel86 implements IVisitor<Object> {
         emitLn("    push rbp");
         emitLn("    mov rbp,rsp");
         functionDeclaration.statements.accept(this);
-        emitLn("    mov rax,0");
         emitLn("    pop rbp");
         emitLn("    ret");
         
@@ -211,7 +246,10 @@ public class Intel86 implements IVisitor<Object> {
     }
     @Override
     public Object visit(ReturnStatement returnStatement) {
-        // TODO Auto-generated method stub
+        //Expression val=(Expression)returnStatement.returnExpression.accept(this);
+        //setRegister("rax");
+        //emitIns("mov rax,"+val.getValue());
+
         return null;
     }
     @Override

@@ -23,7 +23,9 @@ public class Assignment extends Expression {
         this.right = right;
 
     }
-
+    public Object getValue(){
+        return null;
+    }
     @Override
     public Object accept(IVisitor<?> visitor) {
         return visitor.visit(this);

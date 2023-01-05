@@ -22,7 +22,7 @@ public class Int extends Expression {
         this.x = x;
     }
 
-    public long getValue() {
+    public Object getValue() {
         return this.x;
     }
 
