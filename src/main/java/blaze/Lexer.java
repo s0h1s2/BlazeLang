@@ -226,19 +226,17 @@ public class Lexer {
                     return makeDoubleToken(TokenKind.TOKEN_BANG, '!', TokenKind.TOKEN_NOTEQUAL);
                 }
                 case '<': {
-                    advance();
-                    if (match('=')) {
+                    if (matchNext('=')) {
                         return makeSingleToken(TokenKind.TOKEN_LEQ);
-                    } else if (match('<')) {
+                    } else if (matchNext('<')) {
                         return makeSingleToken(TokenKind.TOKEN_LEFTSHIFT);
                     }
                     return makeSingleToken(TokenKind.TOKEN_LE);
                 }
                 case '>': {
-                    advance();
-                    if (match('=')) {
+                    if (matchNext('=')) {
                         return makeSingleToken(TokenKind.TOKEN_GEQ);
-                    } else if (match('>')) {
+                    } else if (matchNext('>')) {
                         return makeSingleToken(TokenKind.TOKEN_RIGHTSHIFT);
                     }
                     return makeSingleToken(TokenKind.TOKEN_GE);

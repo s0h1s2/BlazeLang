@@ -15,6 +15,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.function.BinaryOperator;
 
 import blaze.IVisitor;
 import blaze.ast.ArrayDeclaration;
@@ -49,7 +50,7 @@ public class Intel86 implements IVisitor<Object> {
     private FileWriter writer;
     private HashMap<String,Boolean> registersInUse;
     private String[] registers;
-
+    private int labelCounter=1;
     public Intel86(File file){
         try {
             this.writer=new FileWriter(file);
@@ -62,7 +63,24 @@ public class Intel86 implements IVisitor<Object> {
         }
         
     }
-    private String getRegister(){
+    private String generateLabel(){
+        String result=".L"+labelCounter;
+        labelCounter++;
+        return result;
+    }
+    private boolean isRegisterAvailable(String reg){
+        if(registersInUse.get(reg)==null){
+            // TODO check if register exist in registers array for now just insert into the map of registers.
+            registersInUse.put(reg, false);
+            return true;
+        }
+        if(registersInUse.get(reg)==true){
+            return false;
+        }
+        
+        return true;
+    }
+    private String getFreeRegister(){
         for (String register : registers) {
             if(registersInUse.get(register)==null){
                 registersInUse.put(register,true);
@@ -77,10 +95,7 @@ public class Intel86 implements IVisitor<Object> {
         throw new Error("No Register found.");
 
     }
-    private void setRegister(String reg){
-        registersInUse.put(reg, true);
-    }
-    
+
     private void freeRegister(String key){
         registersInUse.put(key, false);
     }
@@ -107,6 +122,16 @@ public class Intel86 implements IVisitor<Object> {
     @Override
     public Object visit(IfStatement ifStatement) {
         ifStatement.condition.accept(this);
+        String label=generateLabel();
+        emitIns("jne "+label);
+        ifStatement.then.accept(this);
+        emitLn(label+":");
+        if(ifStatement.elseIfs!=null){
+            ifStatement.elseIfs.forEach((stmt->stmt.accept(this)));
+        }
+        if(ifStatement.els!=null){
+            ifStatement.els.accept(this);
+        }
         return null;
     }
     @Override
@@ -119,23 +144,30 @@ public class Intel86 implements IVisitor<Object> {
     }
     @Override
     public Object visit(BinaryOp binOp) {
+        Object l=binOp.left.accept(this);
+        Object r=binOp.right.accept(this);
         switch(binOp.op){
-            case OPERATOR_ADD:
-                Object l=binOp.left.accept(this);
-                Object r=binOp.right.accept(this);
-                String reg1=getRegister();
-                String reg2=getRegister();
+            case OPERATOR_ADD:{
+                String reg1=getFreeRegister();
+                String reg2=getFreeRegister();
                 emitIns("mov "+reg1+","+l);
-                emitIns("mov "+reg2+","+r);        
+                emitIns("mov "+reg2+","+r);
                 emitIns("add "+reg1+","+reg2);
                 freeRegister(reg2);
                 return reg1;
-            case OPERATOR_DIVIDE:
-                //emitIns("idiv "+left.getReg()+","+right.getReg());
+            }
+            case OPERATOR_DIVIDE:{
                 break;
-            case OPERATOR_MULTIPLY:
-                //emitIns("imul "+left.getReg()+","+right.getReg());
-                break;
+            }
+            case OPERATOR_MULTIPLY:{
+                String reg1=getFreeRegister();
+                String reg2=getFreeRegister();
+                emitIns("mov "+reg1+","+l);
+                emitIns("mov "+reg2+","+r);
+                emitIns("imul "+reg1+","+reg2);
+                freeRegister(reg2);
+                return reg1;
+            }
             case OPERATOR_SUBTRACT:
                 break;
             case OPERATOR_AND:
@@ -156,10 +188,17 @@ public class Intel86 implements IVisitor<Object> {
             case OPERATOR_GE:
             case OPERATOR_LE:
             case OPERATOR_GEQ:
-            case OPERATOR_LEQ:
-                //emitIns("cmp "+left.getReg()+","+right.getReg());
-                break;
-            
+            case OPERATOR_LEQ:{
+                String reg1=getFreeRegister();
+                String reg2=getFreeRegister();
+                emitIns("mov "+reg1+","+l);
+                emitIns("mov "+reg2+","+r);
+                emitIns("cmp "+reg1+","+reg2);
+                freeRegister(reg2);
+                freeRegister(reg1);
+                
+                return binOp.op;
+            }
             case OPERATOR_OR:
 
                 break;
@@ -172,8 +211,9 @@ public class Intel86 implements IVisitor<Object> {
     }
     @Override
     public Object visit(Bool bool) {
-        // TODO Auto-generated method stub
-        return null;
+        // TODO Auto-generated method stu
+        return 1;
+
     }
     @Override
     public Object visit(Ternary ternary) {
@@ -182,7 +222,7 @@ public class Intel86 implements IVisitor<Object> {
     }
     @Override
     public Object visit(VariableExpression varExpression) {
-        // TODO Auto-generated method stub
+
         return null;
     }
     @Override
@@ -254,7 +294,7 @@ public class Intel86 implements IVisitor<Object> {
     }
     @Override
     public Object visit(Assignment assignment) {
-        // TODO Auto-generated method stub
+        
         return null;
     }
     @Override

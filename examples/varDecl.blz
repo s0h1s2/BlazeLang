@@ -1,17 +1,20 @@
 var a:int=5;
 var b:char='a';
 var helloDarkness:int=256;
-
-// fun test():bool{
-	// return false;
-//}
-
+struct Token{
+	start:int;
+	current:char;
+	end:int;
+}
 fun main():int{
-	// mov rax,12;
-	// mov rcx,3
-	// add rax,rcx
-	1+2+3;
-	//return ;
+	if(1+2+3<6){
+		//return 2;
+		1+2+3;
+	}else if(1==2){
+		return 12;
+	}else if(1==1){
+		return 2;
+	}
 	return 1;
 }
 
