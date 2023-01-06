@@ -45,6 +45,7 @@ import blaze.types.BoolType;
 import blaze.types.CharType;
 import blaze.types.IntType;
 import blaze.types.Type;
+import blaze.util.AstOperators;
 
 public class Intel86 implements IVisitor<Object> {
     private FileWriter writer;
@@ -121,17 +122,40 @@ public class Intel86 implements IVisitor<Object> {
     
     @Override
     public Object visit(IfStatement ifStatement) {
-        ifStatement.condition.accept(this);
+        AstOperators.AstBinaryOperator op=(AstOperators.AstBinaryOperator)ifStatement.condition.accept(this);
         String label=generateLabel();
-        emitIns("jne "+label);
+        switch(op){
+            case OPERATOR_EQUAL:
+                emitIns("jne "+label);
+                break;
+            case OPERATOR_GE:
+                emitIns("jl "+label);
+                break;
+            case OPERATOR_GEQ:
+                emitIns("; not implemented");
+                break;
+            case OPERATOR_LE:
+                emitIns("jg "+label);
+                break;
+            case OPERATOR_LEQ:
+                emitIns("; not implemented");
+                break;
+            case OPERATOR_NOEQUAL:
+                emitIns("je "+label);
+                break;
+        }
         ifStatement.then.accept(this);
+        String end=generateLabel();
+        emitIns("jmp "+end);
         emitLn(label+":");
         if(ifStatement.elseIfs!=null){
             ifStatement.elseIfs.forEach((stmt->stmt.accept(this)));
         }
         if(ifStatement.els!=null){
             ifStatement.els.accept(this);
+            //  return null;
         }
+        emitLn(end+":");
         return null;
     }
     @Override
@@ -196,7 +220,6 @@ public class Intel86 implements IVisitor<Object> {
                 emitIns("cmp "+reg1+","+reg2);
                 freeRegister(reg2);
                 freeRegister(reg1);
-                
                 return binOp.op;
             }
             case OPERATOR_OR:
@@ -248,9 +271,6 @@ public class Intel86 implements IVisitor<Object> {
         emitLn("    push rbp");
         emitLn("    mov rbp,rsp");
         functionDeclaration.statements.accept(this);
-        emitLn("    pop rbp");
-        emitLn("    ret");
-        
         return null;
     }
     @Override
@@ -286,10 +306,11 @@ public class Intel86 implements IVisitor<Object> {
     }
     @Override
     public Object visit(ReturnStatement returnStatement) {
-        //Expression val=(Expression)returnStatement.returnExpression.accept(this);
-        //setRegister("rax");
-        //emitIns("mov rax,"+val.getValue());
+        Object val=returnStatement.returnExpression.accept(this);
 
+        emitIns("mov rax,"+val);
+        emitIns("pop rbp");
+        emitIns("ret");
         return null;
     }
     @Override

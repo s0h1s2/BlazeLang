@@ -223,7 +223,7 @@ public class Lexer {
                     throw new Error("char literal must be closed.");
                 }
                 case '!': {
-                    return makeDoubleToken(TokenKind.TOKEN_BANG, '!', TokenKind.TOKEN_NOTEQUAL);
+                    return makeDoubleToken(TokenKind.TOKEN_BANG, '=', TokenKind.TOKEN_NOTEQUAL);
                 }
                 case '<': {
                     if (matchNext('=')) {
