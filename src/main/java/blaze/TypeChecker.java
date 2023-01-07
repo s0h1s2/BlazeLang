@@ -262,12 +262,12 @@ public class TypeChecker implements IVisitor<Type> {
         return new CharType();
     }
     @Override
-    public Object visit(ArrayDeclaration arrayDeclaration) {
+    public Type visit(ArrayDeclaration arrayDeclaration) {
         // TODO Auto-generated method stub
         return null;
     }
     @Override
-    public Object visit(Struct struct) {
+    public Type visit(Struct struct) {
         // TODO Auto-generated method stub
         return null;
     }

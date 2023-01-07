@@ -212,13 +212,13 @@ public class DeclarationResolver implements IVisitor<Void> {
     }
 
     @Override
-    public Object visit(ArrayDeclaration arrayDeclaration) {
+    public Void visit(ArrayDeclaration arrayDeclaration) {
         // TODO Auto-generated method stub
         return null;
     }
 
     @Override
-    public Object visit(Struct struct) {
+    public Void visit(Struct struct) {
         // TODO Auto-generated method stub
         return null;
     }

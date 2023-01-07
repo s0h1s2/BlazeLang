@@ -33,9 +33,6 @@ public class Main {
         binder.visit(ast);
         TypeChecker checker=new TypeChecker(table);
         checker.visit(ast);
-        File file=new File("/home/mrprogrammez/Desktop/blaze/asmOutput/hello.asm");
-        Intel86 intelGenerator=new Intel86(file);
-        intelGenerator.visit(ast);
 
     }
 
