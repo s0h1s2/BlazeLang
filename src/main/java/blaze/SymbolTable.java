@@ -16,15 +16,18 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+import javax.swing.text.TabExpander;
+
 import blaze.types.Type;
 
 public class SymbolTable {
     private Map<String, Type> decls;
-    private SymbolTable parent;
-    public SymbolTable() {
-        this.decls = new HashMap<String, Type>();
-        this.parent=null;
-    }
+    private SymbolTable parent=null;
+    // public SymbolTable() {
+    //     this.decls = new HashMap<String, Type>();
+    //     this.parent=null;
+    // }
+
     public SymbolTable(SymbolTable parent) {
         this.decls = new HashMap<String, Type>();
         this.parent = parent;
@@ -49,7 +52,7 @@ public class SymbolTable {
         return false;
     }
     public boolean containDecl(String name) {
-        if (decls!=null && decls.containsKey(name) ) {
+        if(decls.containsKey(name)){
             return true;
         }
         return false;

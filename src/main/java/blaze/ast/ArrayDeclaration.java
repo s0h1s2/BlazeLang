@@ -2,8 +2,6 @@ package blaze.ast;
 
 import java.util.List;
 
-import javax.print.attribute.standard.Media;
-
 import blaze.IVisitor;
 import blaze.types.Type;
 

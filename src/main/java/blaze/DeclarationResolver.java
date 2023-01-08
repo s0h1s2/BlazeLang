@@ -12,59 +12,55 @@
 
 package blaze;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Hashtable;
+import java.util.Stack;
+
+import javax.swing.plaf.synth.SynthButtonUI;
+
 import blaze.ast.*;
 import blaze.types.FunctionType;
 import blaze.types.Type;
 
-import java.util.Stack;
-
 public class DeclarationResolver implements IVisitor<Void> {
-    final private SymbolTable table;
-    final private Stack<SymbolTable> scopes;
-
+    final private SymbolTable top;
+    private Stack<SymbolTable> symbols;
+    private HashMap<String,Void> unresolvedNames;
+    
     public DeclarationResolver(SymbolTable table) {
-
-        this.table = table;
-        this.scopes = new Stack<>();
+        this.top=table;
+        this.symbols=new Stack<>();
+        this.symbols.push(table);
+        this.unresolvedNames=new HashMap<String,Void>();
     }
 
     private void enterScope() {
-        if(!this.scopes.empty()){
-            this.scopes.push(new SymbolTable(this.scopes.peek()));
-        }
-        this.scopes.push(new SymbolTable(table));
+        SymbolTable scope=new SymbolTable(symbols.peek());
+        symbols.push(scope);
     }
 
     private void leaveScope() {
-        this.scopes.pop();
+        symbols.pop();
     }
 
     private void declare(String name, Type type) {
-        if (scopes.empty()) {
-            if (!table.containDecl(name)) {
-                table.define(name, type);
-            } else {
-                throw new Error("Can't redeclare '" + name + "'.");
-            }
-        } else {
-            if (!scopes.peek().containDecl(name)) {
-                scopes.peek().define(name, type);
-            } else {
-                throw new Error("Can't redeclare '" + name + "'.");
-            }
+        if(!symbols.peek().containDecl(name)){
+            symbols.peek().define(name, type);
+        }else{
+            throw new Error("can't redclare '"+name+"' in current scope.");
         }
+        
     }
 
     private void resolve(String name) {
-        if (!scopes.empty()) {
-            if (scopes.peek().containDecl(name)) {
+        for(int i=symbols.size()-1;i>=0;--i){
+            SymbolTable scope=symbols.get(i);
+            if (scope.containDecl(name)) {
                 return;
-            }
+            }    
         }
-        if (!table.containDecl(name)) {
-            throw new Error("'" + name + "' not found.");
-        }
-
+        throw new Error("'" + name + "' not found.");
     }
 
     @Override
@@ -84,6 +80,7 @@ public class DeclarationResolver implements IVisitor<Void> {
 
     @Override
     public Void visit(CallExpr callExpr) {
+        unresolvedNames.put(callExpr.name, null);
         for (Expression arg : callExpr.args) {
             arg.accept(this);
         }
@@ -130,17 +127,21 @@ public class DeclarationResolver implements IVisitor<Void> {
 
     @Override
     public Void visit(FunctionDeclaration functionDeclaration) {
-        if (table.containDecl(functionDeclaration.name)) {
+        
+        if (top.containDecl(functionDeclaration.name)) {
             throw new Error("Can't redeclare function '" + functionDeclaration.name + "'.");
         }
+        if(unresolvedNames.containsKey(functionDeclaration.name)){
+           unresolvedNames.remove(functionDeclaration.name);
+        }
         enterScope();
+        top.define(functionDeclaration.name, new FunctionType(symbols.peek()));
         if (functionDeclaration.parameters != null) {
             for (Parameter param : functionDeclaration.parameters) {
                 declare(param.name, param.type);
             }
         }
         functionDeclaration.statements.accept(this);
-        table.define(functionDeclaration.name, new FunctionType(scopes.firstElement()));
         leaveScope();
 
         return null;
@@ -171,9 +172,11 @@ public class DeclarationResolver implements IVisitor<Void> {
 
     @Override
     public Void visit(BlockStatement block) {
+        enterScope();
         for (Stmt stmt : block.stmts) {
             stmt.accept(this);
         }
+        leaveScope();
         return null;
     }
 
@@ -196,6 +199,11 @@ public class DeclarationResolver implements IVisitor<Void> {
     public Void visit(Program program) {
         for (int i = 0; i < program.getDeclarations().size(); i++) {
             program.getDeclarations().get(i).accept(this);
+        }
+        if(unresolvedNames.size()!=0){
+            for (String name: unresolvedNames.keySet()) {
+                throw new Error("function '"+name+"' doesn't exist.");
+            }
         }
         return null;
     }
@@ -221,6 +229,18 @@ public class DeclarationResolver implements IVisitor<Void> {
     public Void visit(Struct struct) {
         // TODO Auto-generated method stub
         return null;
+    }
+
+    public SymbolTable getTop() {
+        return top;
+    }
+
+    public Stack<SymbolTable> getSymbols() {
+        return symbols;
+    }
+
+    public void setSymbols(Stack<SymbolTable> symbols) {
+        this.symbols = symbols;
     }
 
 }

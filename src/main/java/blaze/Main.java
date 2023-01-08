@@ -28,11 +28,12 @@ public class Main {
         Lexer lex = new Lexer(example); //
         Parser parser = new Parser(lex);
         Program ast = parser.parse();
-        SymbolTable table = new SymbolTable();
+        SymbolTable table = new SymbolTable(null);
         DeclarationResolver binder = new DeclarationResolver(table);
         binder.visit(ast);
-        TypeChecker checker=new TypeChecker(table);
-        checker.visit(ast);
+        // TypeChecker checker=new TypeChecker(table);
+        // checker.visit(ast);
+
 
     }
 
