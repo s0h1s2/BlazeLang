@@ -17,7 +17,6 @@ import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Stack;
 
-import javax.swing.plaf.synth.SynthButtonUI;
 
 import blaze.ast.*;
 import blaze.types.FunctionType;
@@ -241,6 +240,12 @@ public class DeclarationResolver implements IVisitor<Void> {
 
     public void setSymbols(Stack<SymbolTable> symbols) {
         this.symbols = symbols;
+    }
+
+    @Override
+    public Void visit(FieldAccess fieldAccess) {
+        // TODO Auto-generated method stub
+        return null;
     }
 
 }

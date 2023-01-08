@@ -291,6 +291,10 @@ public class Lexer {
                 case ',': {
                     return makeSingleToken(TokenKind.TOKEN_COMMA);
                 }
+                case '.': {
+                    return makeSingleToken(TokenKind.TOKEN_DOT);
+                }
+                
                 default: {
                     System.err.println("Skipped unknown character '" + chr() + "'.");
                     advance();

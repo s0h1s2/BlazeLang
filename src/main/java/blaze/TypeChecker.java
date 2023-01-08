@@ -19,6 +19,7 @@ import blaze.ast.Bool;
 import blaze.ast.CallExpr;
 import blaze.ast.CharLit;
 import blaze.ast.Expression;
+import blaze.ast.FieldAccess;
 import blaze.ast.FunctionDeclaration;
 import blaze.ast.IfStatement;
 import blaze.ast.Int;
@@ -268,6 +269,11 @@ public class TypeChecker implements IVisitor<Type> {
     }
     @Override
     public Type visit(Struct struct) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+    @Override
+    public Type visit(FieldAccess fieldAccess) {
         // TODO Auto-generated method stub
         return null;
     }

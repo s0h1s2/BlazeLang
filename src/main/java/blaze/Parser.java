@@ -367,6 +367,17 @@ public class Parser {
 
     private Expression postfix() {
         Expression left = primary();
+        if(match(TokenKind.TOKEN_DOT)){
+            if(!(left instanceof VariableExpression)){
+                throw new Error("Field name expected.");
+            }
+            Expression right=postfix();
+            if(!(right instanceof VariableExpression || right instanceof FieldAccess)){
+                throw new Error("Field name expected.");
+            }
+            
+            return new FieldAccess(left, right);
+        }
         if (match(TokenKind.TOKEN_INCREMENT) || match(TokenKind.TOKEN_DECREMENT)) {
             left = new Modify(left, AstOperation.getModifyOperator(prev.getKind()));
         }

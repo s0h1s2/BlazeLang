@@ -54,4 +54,6 @@ public interface IVisitor<T> {
     public T visit(ArrayDeclaration arrayDeclaration);
 
     public T visit(Struct struct);
+
+    public T visit(FieldAccess fieldAccess);
 }
