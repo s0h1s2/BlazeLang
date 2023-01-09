@@ -3,7 +3,6 @@ var a:int=5;
 // var helloDarkness:int=256;
 struct TokenKind{
 	name:char;
-
 }
 struct Token{
 	kind:TokenKind;
@@ -12,21 +11,9 @@ struct Token{
 	end:int;
 }
 
+
 fun main():int{
-	a=a+1;
 	var currentToken:Token;
-	currentToken.name.hello;
-	sayHello();
-	// sayBye();
-	
-	{
-		var a:int=5;
-		{
-			var a:int=5;
-		}
-	}
+	currentToken.kind.name;
 	return 0;
-}
-fun sayHello():int{
-	
 }

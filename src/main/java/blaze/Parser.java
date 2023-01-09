@@ -12,6 +12,7 @@
 
 package blaze;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 
 import java.util.List;
@@ -240,8 +241,8 @@ public class Parser {
         Expression left = ternary();
 
         if (match(TokenKind.TOKEN_ASSIGN)) {
-            if (!(left instanceof VariableExpression)) {
-                throw new Error("Only identifier can be assigned.");
+            if (!(left instanceof VariableExpression) && !(left instanceof FieldAccess)) {
+                throw new Error("Only identifier or struct field can be assigned.");
             }
             left = new Assignment(left, assignment());
         }
@@ -368,15 +369,15 @@ public class Parser {
     private Expression postfix() {
         Expression left = primary();
         if(match(TokenKind.TOKEN_DOT)){
-            if(!(left instanceof VariableExpression)){
-                throw new Error("Field name expected.");
+            FieldAccess rootField=new FieldAccess(left);
+            expect(TokenKind.TOKEN_IDENTIFIER, "Expected identifier after '.'");
+
+            rootField.addSubField(prev.getValue().toString());
+            while(match(TokenKind.TOKEN_DOT)){
+                expect(TokenKind.TOKEN_IDENTIFIER, "Expected identifier after '.'");
+                rootField.addSubField(prev.getValue().toString());
             }
-            Expression right=postfix();
-            if(!(right instanceof VariableExpression || right instanceof FieldAccess)){
-                throw new Error("Field name expected.");
-            }
-            
-            return new FieldAccess(left, right);
+            return rootField;
         }
         if (match(TokenKind.TOKEN_INCREMENT) || match(TokenKind.TOKEN_DECREMENT)) {
             left = new Modify(left, AstOperation.getModifyOperator(prev.getKind()));

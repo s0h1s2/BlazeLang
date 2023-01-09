@@ -1,9 +1,12 @@
 package blaze.types;
 
 public class CustomType extends Type {
-    public String typeName;
+    private String typeName;
     public CustomType(String typeName){
         this.typeName=typeName;
+    }
+    public String getTypeName(){
+        return this.typeName;
     }
     @Override
     public boolean equals(Type type){
@@ -12,4 +15,5 @@ public class CustomType extends Type {
         }
         return this.typeName.equals(((CustomType) type).typeName);
     }
+
 }

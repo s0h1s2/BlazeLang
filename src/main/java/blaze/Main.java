@@ -31,7 +31,7 @@ public class Main {
         SymbolTable table = new SymbolTable(null);
         DeclarationResolver binder = new DeclarationResolver(table);
         binder.visit(ast);
-        // TypeChecker checker=new TypeChecker(table);
+        TypeChecker checker=new TypeChecker(table);
         // checker.visit(ast);
 
 

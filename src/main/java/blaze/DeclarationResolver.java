@@ -12,14 +12,14 @@
 
 package blaze;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Hashtable;
 import java.util.Stack;
 
 
 import blaze.ast.*;
+import blaze.types.CustomType;
 import blaze.types.FunctionType;
+import blaze.types.StructType;
 import blaze.types.Type;
 
 public class DeclarationResolver implements IVisitor<Void> {
@@ -38,7 +38,6 @@ public class DeclarationResolver implements IVisitor<Void> {
         SymbolTable scope=new SymbolTable(symbols.peek());
         symbols.push(scope);
     }
-
     private void leaveScope() {
         symbols.pop();
     }
@@ -61,7 +60,16 @@ public class DeclarationResolver implements IVisitor<Void> {
         }
         throw new Error("'" + name + "' not found.");
     }
-
+    private Type getResolvedType(String name) {
+        for(int i=symbols.size()-1;i>=0;--i){
+            SymbolTable scope=symbols.get(i);
+            if (scope.containDecl(name)) {
+                return scope.getDecl(name);
+            }    
+        }
+        return null;
+    }
+    
     @Override
     public Void visit(IfStatement ifStatement) {
         ifStatement.condition.accept(this);
@@ -154,6 +162,14 @@ public class DeclarationResolver implements IVisitor<Void> {
 
     @Override
     public Void visit(VarDeclaration varDeclaration) {
+        if(varDeclaration.type instanceof CustomType){
+            // check top if type exist
+            String name=((CustomType)varDeclaration.type).getTypeName();
+
+            if(!top.containDecl(name)){
+                throw new Error("Type '"+name+"' doesn't exist.");
+            }
+        }
         declare(varDeclaration.name, varDeclaration.type);
         if (varDeclaration.init != null) {
             varDeclaration.init.accept(this);
@@ -226,26 +242,16 @@ public class DeclarationResolver implements IVisitor<Void> {
 
     @Override
     public Void visit(Struct struct) {
-        // TODO Auto-generated method stub
+        HashMap<String,Type> map=new HashMap<>();
+        for (Parameter field : struct.fields) {
+            map.put(field.name, field.type);
+        }
+        top.define(struct.name, new StructType(struct.name,map));
         return null;
-    }
-
-    public SymbolTable getTop() {
-        return top;
-    }
-
-    public Stack<SymbolTable> getSymbols() {
-        return symbols;
-    }
-
-    public void setSymbols(Stack<SymbolTable> symbols) {
-        this.symbols = symbols;
     }
 
     @Override
     public Void visit(FieldAccess fieldAccess) {
-        // TODO Auto-generated method stub
         return null;
     }
-
 }

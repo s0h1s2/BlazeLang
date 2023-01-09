@@ -1,10 +1,16 @@
 package blaze.types;
 
-public class StructType extends CustomType {
+import java.util.HashMap;
 
-    public StructType(String typeName) {
+
+public class StructType extends CustomType {
+    private HashMap<String,Type> fields;
+    public StructType(String typeName,HashMap<String,Type> fields) {
         super(typeName);
-        
+        this.fields=fields;
+    }
+    public boolean isFieldExist(String name){
+        return this.fields.containsKey(name);
     }
     
 }

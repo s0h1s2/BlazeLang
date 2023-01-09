@@ -1,13 +1,18 @@
 package blaze.ast;
 
+import java.util.LinkedList;
+
 import blaze.IVisitor;
 
 public class FieldAccess extends Expression {
     public Expression left;
-    public Expression right;
-    public FieldAccess(Expression left, Expression right) {
+    public LinkedList<String> subFields;
+    public FieldAccess(Expression left) {
         this.left = left;
-        this.right = right;
+        this.subFields=new LinkedList<>();
+    }
+    public void addSubField(String name){
+        subFields.addLast(name);
     }
     @Override
     public Object accept(IVisitor<?> visitor) {
