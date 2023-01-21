@@ -16,7 +16,7 @@ import blaze.IVisitor;
 
 public class Int extends Expression {
     private long x;
-
+    
     public Int(long x) {
         super();
         this.x = x;

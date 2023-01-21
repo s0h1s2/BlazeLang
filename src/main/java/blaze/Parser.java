@@ -195,11 +195,11 @@ public class Parser {
 
     private Type parseType() {
         if (match(TokenKind.TOKEN_INT)) {
-            return new IntType();
+            return PrimitiveTypes.INT_TYPE;
         } else if (match(TokenKind.TOKEN_CHAR)) {
-            return new CharType();
+            return PrimitiveTypes.CHAR_TYPE;
         } else if (match(TokenKind.TOKEN_BOOL)) {
-            return new BoolType();
+            return PrimitiveTypes.BOOL_TYPE;
         }else{
             CustomType type=new CustomType(token.getValue().toString());
             expect(TokenKind.TOKEN_IDENTIFIER, "Type must be identifier.");

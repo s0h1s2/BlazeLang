@@ -20,6 +20,7 @@ public interface IVisitor<T> {
     public T visit(CallExpr callExpr);
 
     public T visit(Int integer);
+    
 
     public T visit(BinaryOp binOp);
 

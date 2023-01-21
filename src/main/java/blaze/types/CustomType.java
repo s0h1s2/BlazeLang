@@ -1,6 +1,6 @@
 package blaze.types;
 
-public class CustomType extends Type {
+public class CustomType implements Type {
     private String typeName;
     public CustomType(String typeName){
         this.typeName=typeName;

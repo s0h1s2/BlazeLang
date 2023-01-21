@@ -1,6 +1,4 @@
 var a:int=5;
-// var b:char='a';
-// var helloDarkness:int=256;
 struct TokenKind{
 	name:char;
 }
@@ -10,10 +8,15 @@ struct Token{
 	current:char;
 	end:int;
 }
-
-
+fun add(a:int,b:int):bool{
+	return false;
+}
 fun main():int{
-	var currentToken:Token;
-	currentToken.kind.name;
+	var d:int=12;
+	var c:int=56;
+	var x:bool=add(12,3);
+	x=123;
+	println(x)
 	return 0;
 }
+

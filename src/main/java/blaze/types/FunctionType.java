@@ -14,12 +14,20 @@ package blaze.types;
 
 import blaze.SymbolTable;
 
-public class FunctionType extends Type {
+public class FunctionType implements Type {
+    
     private SymbolTable localAndParam;
-    public FunctionType(SymbolTable localAndParam) {
+    public Type returnType;
+    
+    public FunctionType(SymbolTable localAndParam,Type returnType) {
         this.localAndParam = localAndParam;
+        this.returnType=returnType;
     }
     public SymbolTable getTable(){
         return localAndParam;
+    }
+    @Override
+    public boolean equals(Type type) {
+        return false;
     }
 }

@@ -11,6 +11,8 @@
  */
 
 package blaze;
+import java.time.chrono.ThaiBuddhistChronology;
+
 import blaze.ast.ArrayDeclaration;
 import blaze.ast.Assignment;
 import blaze.ast.BinaryOp;
@@ -34,10 +36,8 @@ import blaze.ast.Unary;
 import blaze.ast.VarDeclaration;
 import blaze.ast.VariableExpression;
 import blaze.ast.WhileStatement;
-import blaze.types.BoolType;
-import blaze.types.CharType;
 import blaze.types.FunctionType;
-import blaze.types.IntType;
+import blaze.types.PrimitiveTypes;
 import blaze.types.Type;
 
 public class TypeChecker implements IVisitor<Type> {
@@ -50,30 +50,27 @@ public class TypeChecker implements IVisitor<Type> {
 
     public TypeChecker(SymbolTable table){
         this.global=table;
-        this.table=table;
-        this.prev=table;
     }
+    private void isBooleanType(Type type){
+        if(type!=PrimitiveTypes.BOOL_TYPE){
+            throw new Error("Must be boolean type.");
+        }
+    }
+    
     @Override
     public Type visit(IfStatement ifStatement) {
         Type conditionType=(Type)ifStatement.condition.accept(this);
-        if(conditionType instanceof BoolType){
-            ifStatement.then.accept(this);
-            if(ifStatement.elseIfs!=null){
-                ifStatement.elseIfs.forEach((stmt)->stmt.accept(this));
-            }
-            if(ifStatement.els!=null){
-                ifStatement.els.accept(this);
-            }
-            
-            return conditionType;
-        }
+        
         throw new Error("If statement must have boolean condition.");
     }
 
     @Override
     public Type visit(CallExpr callExpr) {
-        FunctionType callee=(FunctionType)global.getDecl(callExpr.name);
-        // TODO: handle this in declaration resolver.
+        // check weather the function exist or not.
+        if(global.getDeclType(callExpr.name)==null){
+            throw new Error("Function '"+callExpr.name+"' doesn't exist.");
+        }
+        FunctionType callee=(FunctionType)global.getDeclType(callExpr.name);
         if(callee.getTable().getKeys().size()!=callExpr.args.size()){
             throw new Error("Argument number must be same with function declaration.");
         }
@@ -81,17 +78,16 @@ public class TypeChecker implements IVisitor<Type> {
         for (int i = 0; i < callExpr.args.size(); i++) {
             Type argType=(Type)callExpr.args.get(i).accept(this);
             String parameterName=(String)callee.getTable().getKeys().toArray()[i];
-            if(!callee.getTable().getDecl(parameterName).equals(argType)){
+            if(!callee.getTable().getDeclType(parameterName).equals(argType)){
                 throw new Error("Argument must be same type as function.");
             }
         }
-        return null;
+        return callee.returnType;
     }
 
     @Override
     public Type visit(Int integer) {
-        
-        return new IntType();
+        return PrimitiveTypes.INT_TYPE;
     }
 
     @Override
@@ -124,10 +120,6 @@ public class TypeChecker implements IVisitor<Type> {
             case OPERATOR_OR:{
                 Type leftType=(Type)binOp.left.accept(this);
                 Type rightType=(Type)binOp.right.accept(this);
-                if(leftType.equals(rightType)){
-                    return new BoolType();
-                }
-                throw new Error("Left and Right must be same type.");
             }
             default:
                 throw new UnsupportedOperationException(null, null);
@@ -137,17 +129,26 @@ public class TypeChecker implements IVisitor<Type> {
 
     @Override
     public Type visit(Bool bool) {
-        return new BoolType();
+        return PrimitiveTypes.BOOL_TYPE;
     }
 
     @Override
     public Type visit(Ternary ternary) {
-        return null;
+        Type conditionType=(Type)ternary.cond.accept(this);
+        if(!(conditionType.equals(conditionType))){
+            throw new Error("Condition must be boolean");
+        }
+        Type left=(Type)ternary.then.accept(this);
+        Type right=(Type)ternary.elseExpr.accept(this);
+        if(!left.equals(right)){
+            throw new Error("Ternary must return same literal value");
+        }
+        return left;
     }
 
     @Override
     public Type visit(VariableExpression varExpression) {
-        return table.getDecl(varExpression.name);
+        return global.getDeclType(varExpression.name);
     }
 
     @Override
@@ -160,7 +161,7 @@ public class TypeChecker implements IVisitor<Type> {
                 break;
             case OPERATOR_NEGATIVE:
             case OPERATOR_POSITIVE:
-                if(right instanceof IntType){
+                if(right.equals(PrimitiveTypes.INT_TYPE)){
                     return right;
                 }
                 throw new Error("-/+ right hand must be int.");
@@ -173,9 +174,7 @@ public class TypeChecker implements IVisitor<Type> {
 
     @Override
     public Type visit(FunctionDeclaration functionDeclaration) {
-        FunctionType functionTable=(FunctionType)table.getDecl(functionDeclaration.name);
-        this.prev=this.table;
-        this.table=functionTable.getTable();
+        FunctionType functionTable=(FunctionType)global.getDeclType(functionDeclaration.name);
         
         funcitonReturnType=functionDeclaration.returnType;
         functionDeclaration.statements.accept(this);
@@ -207,9 +206,12 @@ public class TypeChecker implements IVisitor<Type> {
         }
         return varDeclaration.type;
     }
-
+    
     @Override
     public Type visit(WhileStatement whileStatement) {
+        Type condition=(Type)whileStatement.condition.accept(this);
+        isBooleanType(condition);
+        whileStatement.block.accept(this);
         return null;
     }
 
@@ -241,11 +243,21 @@ public class TypeChecker implements IVisitor<Type> {
 
     @Override
     public Type visit(Assignment assignment) {
+        Type left=(Type)assignment.left.accept(this);
+        Type right=(Type)assignment.right.accept(this);
+        if(!left.equals(right)){
+            throw new Error("Assignment must be");
+        }
         return null;
     }
 
     @Override
     public Type visit(Program program) {
+        // check for main function.
+        // but what happens if program has many files?.
+        if(global.getDeclType("main")==null){
+            throw new Error("Program must implement main function.");
+        }
         for(int i=0;i<program.getDeclarations().size();i++){
             program.getDeclarations().get(i).accept(this);
         }
@@ -260,7 +272,7 @@ public class TypeChecker implements IVisitor<Type> {
     }
     @Override
     public Type visit(CharLit charLit) {
-        return new CharType();
+        return PrimitiveTypes.CHAR_TYPE;
     }
     @Override
     public Type visit(ArrayDeclaration arrayDeclaration) {

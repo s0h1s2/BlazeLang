@@ -15,13 +15,13 @@ package blaze.ast;
 import blaze.IVisitor;
 
 public class Ternary extends Expression {
-    public Expression expr;
+    public Expression cond;
     public Expression then;
     public Expression elseExpr;
 
     public Ternary(Expression expr, Expression then, Expression elseExpr) {
         super();
-        this.expr = expr;
+        this.cond = expr;
         this.then = then;
         this.elseExpr = elseExpr;
     }

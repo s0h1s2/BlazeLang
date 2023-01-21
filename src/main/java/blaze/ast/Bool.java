@@ -29,8 +29,7 @@ public class Bool extends Expression {
 
     @Override
     public Object getValue() {
-        // TODO Auto-generated method stub
-        return null;
+        return this.value;
     }
 
 }
