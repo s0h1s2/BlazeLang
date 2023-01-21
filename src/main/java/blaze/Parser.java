@@ -11,15 +11,11 @@
  */
 
 package blaze;
-
-import java.lang.reflect.Field;
 import java.util.ArrayList;
-
 import java.util.List;
 
 import blaze.ast.*;
 import blaze.types.*;
-
 import blaze.util.AstOperation;
 
 public class Parser {

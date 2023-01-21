@@ -11,7 +11,8 @@
  */
 
 package blaze;
-import java.time.chrono.ThaiBuddhistChronology;
+
+import java.util.Stack;
 
 import blaze.ast.ArrayDeclaration;
 import blaze.ast.Assignment;
@@ -41,16 +42,24 @@ import blaze.types.PrimitiveTypes;
 import blaze.types.Type;
 
 public class TypeChecker implements IVisitor<Type> {
-    private SymbolTable table;
-    private SymbolTable prev;
     private SymbolTable global;
-    private Type funcitonReturnType;
-    private long blockCounter=0;
-    private boolean isFinalReturnReached=false;
-
+    private Stack<Type> tables;  
     public TypeChecker(SymbolTable table){
         this.global=table;
+        this.tables=new Stack<>();
     }
+    private Type peekScope(){
+        return this.tables.peek();
+    }
+    private void enterScope(Type type){
+        this.tables.push(type);
+    }
+
+    private void leaveScope(){
+        this.tables.pop();
+    }
+    
+    
     private void isBooleanType(Type type){
         if(type!=PrimitiveTypes.BOOL_TYPE){
             throw new Error("Must be boolean type.");
@@ -120,6 +129,10 @@ public class TypeChecker implements IVisitor<Type> {
             case OPERATOR_OR:{
                 Type leftType=(Type)binOp.left.accept(this);
                 Type rightType=(Type)binOp.right.accept(this);
+                // TODO: not sure how comparison should work for now let's make it this way.
+                if(!leftType.equals(rightType)){
+                    throw new Error("Comparison Error.");    
+                }
             }
             default:
                 throw new UnsupportedOperationException(null, null);
@@ -175,20 +188,14 @@ public class TypeChecker implements IVisitor<Type> {
     @Override
     public Type visit(FunctionDeclaration functionDeclaration) {
         FunctionType functionTable=(FunctionType)global.getDeclType(functionDeclaration.name);
-        
-        funcitonReturnType=functionDeclaration.returnType;
+        enterScope(functionTable);
         functionDeclaration.statements.accept(this);
-        if(!isFinalReturnReached){
-            throw new Error("Function must return expression.");
-        }
-        funcitonReturnType=null;
-        isFinalReturnReached=false;
-        this.table=this.prev;
+        leaveScope();
         return null;
     }
     @Override
     public Type visit(Parameter parameter) {
-        
+        System.out.println("Do we visit this?");
         return null;
     }
 
@@ -199,7 +206,6 @@ public class TypeChecker implements IVisitor<Type> {
             init=(Type)varDeclaration.init.accept(this);
             if(varDeclaration.type.equals(init)){
                 return varDeclaration.type;
-                
             }else{
                 throw new Error("variable and expression must be same type");
             }
@@ -217,26 +223,20 @@ public class TypeChecker implements IVisitor<Type> {
 
     @Override
     public Type visit(BlockStatement block) {
-        blockCounter++;
         for (Stmt stmt : block.stmts) {
             stmt.accept(this);
         }
-        blockCounter--;
         return null;
     }
 
     @Override
     public Type visit(ReturnStatement returnStatement) {
-        if(blockCounter==1){
-            isFinalReturnReached=true;   
-        }
+        FunctionType scope=(FunctionType)peekScope();
         if(returnStatement.returnExpression!=null){
-            Type result=(Type)returnStatement.returnExpression.accept(this);
-            if(!funcitonReturnType.equals(result)){
+            Type returnExpression=(Type)returnStatement.returnExpression.accept(this);
+            if(!returnExpression.equals(scope.returnType)){
                 throw new Error("Return must be same type as function.");
             }
-        }else{
-            throw new Error("Funciton must return expression.");
         }
         return null;
     }
@@ -246,7 +246,7 @@ public class TypeChecker implements IVisitor<Type> {
         Type left=(Type)assignment.left.accept(this);
         Type right=(Type)assignment.right.accept(this);
         if(!left.equals(right)){
-            throw new Error("Assignment must be");
+            throw new Error("Assignment must be same type");
         }
         return null;
     }
